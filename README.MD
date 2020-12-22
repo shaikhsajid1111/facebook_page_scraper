@@ -32,23 +32,25 @@ Type "help", "copyright", "credits" or "license()" for more information.
 >>>
 >>> print(posts_data)
 {
-    "1719932218183724": {
+    "1728161267360819": {
         "name": "Facebook AI",
-        "shares": 32,
+        "shares": 37,
         "reactions": {
-            "likes": 171,
-            "loves": 15,
-            "wow": 0,
+            "likes": 161,
+            "loves": 12,
+            "wow": 4,
             "cares": 0,
             "sad": 0,
             "angry": 0,
-            "haha": 27
+            "haha": 0
         },
-        "reaction_count": 213,
-        "comments": 11,
-        "content": "Hate speech can come in many forms, including memes that combine text and images. We launched the Hateful Memes Challenge, a first-of-its-kind competition, to help the AI community find new ways to detect multimodal hate speech. Learn about the winners here: https://ai.facebook.com/blog/hateful-memes-challenge-winners",
-        "posted_on": "Friday, 11 December 2020 at 09:15",
-        "post_url": "https://www.facebook.com/facebookai/posts/1719932218183724"
+        "reaction_count": 177,
+        "comments": 5,
+        "content": "AI research and engineering will be able to make faster progress if we have a single set of standardized, interchangeable building blocks across many different AI subfields. We\u2019re reengineering our platforms, using our open source Hydra framework for configs, and offering greater integration with PyTorch Lightning.",
+        "posted_on": "Monday, 21 December 2020 at 09:21",
+        "video": "",
+        "image": "https://scontent-bom1-1.xx.fbcdn.net/v/t39.2365-6/p540x282/132047078_1217442611984557_3425272022547601475_n.jpg?_nc_cat=101&ccb=2&_nc_sid=eaa83b&_nc_ohc=0f6cxeLj7VoAX-pKjjW&_nc_ht=scontent-bom1-1.xx&tp=6&oh=9031cd06a980b2370cff031be5227d3b&oe=600622A5",
+        "post_url": "https://www.facebook.com/facebookai/posts/1728161267360819"
     }, ...
 }
 ```
@@ -125,6 +127,8 @@ It returns a dictionary of dictionaries containing post's details.
         "reaction_count": integer,
         "comments": integer,
         "content": string,
+        "video" : string,
+        "image" : string,
         "posted_on": datetime,  //string containing datetime
         "post_url": string
     }
@@ -242,6 +246,31 @@ content
 </td>
 <td>
 content of post as text
+</td>
+</tr>
+
+<tr>
+<td>
+video
+</td>
+<td>
+ string
+</td>
+<td>
+URL of video present in that post
+</td>
+</tr>
+
+
+<tr>
+<td>
+image
+</td>
+<td>
+ string
+</td>
+<td>
+URL of image present in that post
 </td>
 </tr>
 
