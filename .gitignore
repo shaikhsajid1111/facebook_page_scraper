@@ -2,3 +2,7 @@
 /*/*.log
 /.vscode
 /*/__pycache__
+/*.csv
+/*.json
+/*.txt
+/recycle.py
