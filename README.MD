@@ -1,7 +1,7 @@
 <h1> Facebook Page Scraper </h1>
 
 [![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
-[![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/) [![Python >=3.6.9](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/release/python-376/)
+[![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/) [![Python >=3.6.9](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
 <p> No registration, No need of API key, No limitation on number of requests. Import the library and <b> Just Do It !<b> </p>
 
@@ -15,47 +15,20 @@
 
 
 ```python
-Python 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)] on win32
-Type "help", "copyright", "credits" or "license()" for more information.
+#import Facebook_scraper class from facebook_page_scraper
+from facebook_page_scraper import Facebook_scraper
 
->>> #import Facebook_scraper class from the package
->>> from facebook_page_scraper import Facebook_scraper
->>>
->>> #instantiate the class with parameters
->>> scraper = Facebook_scraper("facebookai",20,"firefox")
->>>
->>> #call the scrap() method 
->>> posts_data = scraper.scrap()
->>>
->>> print(type(posts_data))
-<class 'dict'>
->>>
->>> print(posts_data)
-{
-    "1728161267360819": {
-        "name": "Facebook AI",
-        "shares": 37,
-        "reactions": {
-            "likes": 161,
-            "loves": 12,
-            "wow": 4,
-            "cares": 0,
-            "sad": 0,
-            "angry": 0,
-            "haha": 0
-        },
-        "reaction_count": 177,
-        "comments": 5,
-        "content": "AI research and engineering will be able to make faster progress if we have a single set of standardized, interchangeable building blocks across many different AI subfields. We\u2019re reengineering our platforms, using our open source Hydra framework for configs, and offering greater integration with PyTorch Lightning.",
-        "posted_on": "Monday, 21 December 2020 at 09:21",
-        "video": "",
-        "image": "https://scontent-bom1-1.xx.fbcdn.net/v/t39.2365-6/p540x282/132047078_1217442611984557_3425272022547601475_n.jpg?_nc_cat=101&ccb=2&_nc_sid=eaa83b&_nc_ohc=0f6cxeLj7VoAX-pKjjW&_nc_ht=scontent-bom1-1.xx&tp=6&oh=9031cd06a980b2370cff031be5227d3b&oe=600622A5",
-        "post_url": "https://www.facebook.com/facebookai/posts/1728161267360819"
-    }, ...
-}
+#instantiate the Facebook_scraper class
+
+page_name = "facebookai"
+posts_count = 10
+browser = "firefox"
+
+facebook_ai = Facebook_scraper(page_name,10,browser)
+
 ```
 
-<h3> Parameters </h3>
+<h3> Parameters for  <code>Facebook_scraper() </code> class </h3>
 <table>
 <th>
 <tr>
@@ -102,13 +75,56 @@ which browser to use, either chrome or firefox. if not passed,default is chrome
 </tr>
 
 </table>
-
+<br>
 <hr>
 <br>
-<br>
-Output Structure:
 
-It returns a dictionary of dictionaries containing post's details.
+<h3> Done with instantiation?. <b>Let the scraping begin!</b> </h3>
+<br
+
+>
+<h3> For post's data in <b>JSON</b> format:</h3>
+
+```python
+#call the scrap_to_json() method
+
+json_data = facebook_ai.scrap_to_json()
+print(json_data)
+
+```
+Output:
+```json
+
+{
+    "1730063790503900": {
+        "name": "Facebook AI",
+        "shares": 65,
+        "reactions": {
+            "likes": 305,
+            "loves": 31,
+            "wow": 7,
+            "cares": 0,
+            "sad": 0,
+            "angry": 0,
+            "haha": 0
+        },
+        "reaction_count": 343,
+        "comments": 11,
+        "content": "We\u2019re training computer vision models that leverage Transformers, a deep neural network architecture. Data-efficient image Transformers (DeiT) use less data and computing resources to produce high-performance image classification AI models.  We hope to advance the field of computer vision by sharing this work with the broader community, making large-scale systems that train AI models more accessible to researchers and engineers.",
+        "posted_on": "2020-12-24T04:05:27",
+        "video": "",
+        "image": [
+            "https://scontent-bom1-2.xx.fbcdn.net/v/t39.2365-6/p540x282/131570013_988138305044034_3894567585410559092_n.png?_nc_cat=109&ccb=2&_nc_sid=eaa83b&_nc_ohc=mAeDelparrEAX-3Mk7E&_nc_ht=scontent-bom1-2.xx&_nc_tp=30&oh=3fedb0e3cea6ad6f934ca20f77bec624&oe=600CB4C9"
+        ],
+        "post_url": "https://www.facebook.com/facebookai/posts/1730063790503900"
+    },...
+
+}
+
+
+```
+Output Structure for JSON format:
+
 
 ``` javascript
 {
@@ -128,16 +144,91 @@ It returns a dictionary of dictionaries containing post's details.
         "comments": integer,
         "content": string,
         "video" : string,
-        "image" : string,
-        "posted_on": datetime,  //string containing datetime
+        "image" : list,
+        "posted_on": datetime,  //string containing datetime in ISO 8601
         "post_url": string
     }
 }
 
 ```
 
+<br>
+<hr>
+<br>
 
-Keys of the dictionary:
+<h3> For saving post's data directly to <b>CSV</b> file</h3>
+
+``` python
+#call scrap_to_csv(filename,directory) method
+
+
+filename = "data_file"  #file name without CSV extension,where data will be saved
+directory = "E:\data" #directory where CSV file will be saved
+facebook_ai.scrap_to_csv(filename,directory)
+
+```
+
+content of ```data_file.csv```:
+```csv
+id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,content,video,image,post_url
+1730063790503900,Facebook AI,62,295,30,6,0,0,0,0,331,10,"We�re training computer vision models that leverage Transformers, a deep neural network architecture. Data-efficient image Transformers (DeiT) use less data and computing resources to produce high-performance image classification AI models.  We hope to advance the field of computer vision by sharing this work with the broader community, making large-scale systems that train AI models more accessible to researchers and engineers.",,https://scontent-bom1-2.xx.fbcdn.net/v/t39.2365-6/p540x282/131570013_988138305044034_3894567585410559092_n.png?_nc_cat=109&ccb=2&_nc_sid=eaa83b&_nc_ohc=mAeDelparrEAX9CTY7c&_nc_ht=scontent-bom1-2.xx&_nc_tp=30&oh=c54502f6b0d2063cf455d88d20fe8c57&oe=600CB4C9,https://www.facebook.com/facebookai/posts/1730063790503900
+
+...
+```
+
+<br>
+
+<hr>
+<br>
+
+<h3> Parameters for  <code> scrap_to_csv(filename,directory) </code> method. </h3>
+
+<table>
+<th>
+<tr>
+<td> Parameter Name </td>
+<td> Parameter Type </td>
+<td> Description </td>
+</tr>
+</th>
+
+<tr>
+<td>
+filename
+</td>
+<td>
+string
+</td>
+
+<td>
+name of the CSV file where post's data will be saved
+</td>
+
+</tr>
+
+<tr>
+<td>
+directory
+</td>
+<td>
+string
+</td>
+
+<td>
+directory where CSV file have to be stored.
+</td>
+
+</tr>
+
+</table>
+
+<br>
+<hr>
+<br>
+
+
+
+<h3>Keys of the outputs:</h3>
 <table>
 <th>
 <tr>
@@ -267,10 +358,10 @@ URL of video present in that post
 image
 </td>
 <td>
- string
+ list
 </td>
 <td>
-URL of image present in that post
+python's list containing URLs of all images present in the post
 </td>
 </tr>
 
@@ -282,7 +373,7 @@ posted_on
 datetime
 </td>
 <td>
-time at which post was posted
+time at which post was posted(in ISO 8601 format)
 </td>
 </tr>
 
