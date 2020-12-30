@@ -9,7 +9,29 @@
 
 - Internet Connection
 - Python 3.6+
+- Chrome or Firefox browser installed on your machine
+<br>
 
+<hr>
+<h2>Installation:</h2>
+
+<p> Installing from source: </p>
+<code>git clone https://github.com/shaikhsajid1111/facebook_page_scraper </code>
+<br>
+
+Inside project's directory
+<br>
+<code>
+python setup.py install
+</code>
+<br>
+
+<p>Installing with pypi</p>
+<code>
+pip3 install facebook_page_scraper
+</code>
+
+<hr>
 <h2> How to use? </h2>
 
 
@@ -24,11 +46,11 @@ page_name = "facebookai"
 posts_count = 10
 browser = "firefox"
 
-facebook_ai = Facebook_scraper(page_name,10,browser)
+facebook_ai = Facebook_scraper(page_name,posts_count,browser)
 
 ```
 
-<h3> Parameters for  <code>Facebook_scraper() </code> class </h3>
+<h3> Parameters for  <code>Facebook_scraper(page_name,posts_count,browser) </code> class </h3>
 <table>
 <th>
 <tr>
@@ -93,7 +115,7 @@ print(json_data)
 
 ```
 Output:
-```json
+```javascript
 
 {
     "1730063790503900": {
@@ -402,8 +424,8 @@ URL for that post
 <h2> Tech </h2>
 <p>This project uses different libraries to work properly.</p>
 <ul>
-<li> <a href="https://www.selenium.dev/">selenium</a>
-<li> <a href="https://pypi.org/project/webdriver-manager/">webdriver manager</a>
+<li> <a href="https://www.selenium.dev/" target='_blank'>selenium</a>
+<li> <a href="https://pypi.org/project/webdriver-manager/" target='_blank'>webdriver manager</a>
 </ul>
 <br>
 <hr>
