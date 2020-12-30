@@ -1,7 +1,7 @@
 <h1> Facebook Page Scraper </h1>
 
-[![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
-[![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/) [![Python >=3.6.9](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)](https://github.com/shaikhsajid1111/facebook_page_scraper/graphs/commit-activity)
+[![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://opensource.org/licenses/MIT) [![Python >=3.6.9](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
 <p> No registration, No need of API key, No limitation on number of requests. Import the library and <b> Just Do It !<b> </p>
 
@@ -15,22 +15,24 @@
 <hr>
 <h2>Installation:</h2>
 
-<p> Installing from source: </p>
-<code>git clone https://github.com/shaikhsajid1111/facebook_page_scraper </code>
-<br>
+<h3> Installing from source: </h3>
 
-Inside project's directory
-<br>
-<code>
-python setup.py install
-</code>
-<br>
+```
+git clone https://github.com/shaikhsajid1111/facebook_page_scraper 
+```
 
+<h4> Inside project's directory </h4>
+
+```
+python3 setup.py install
+```
+<br>
 <p>Installing with pypi</p>
-<code>
-pip3 install facebook_page_scraper
-</code>
 
+```
+pip3 install facebook_page_scraper
+```
+<br>
 <hr>
 <h2> How to use? </h2>
 
