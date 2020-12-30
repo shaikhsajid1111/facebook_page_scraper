@@ -35,7 +35,7 @@ class Scraping_utilities:
     def __extract_content(content):
         """returns the text content of selenium element, else if content is string than returns a empty string"""
         if type(content) is not str:
-            content = content.get_attribute('textContent')
+            content = content.find_element_by_tag_name("p").get_attribute('textContent')
         else:
             content = ""
         return content

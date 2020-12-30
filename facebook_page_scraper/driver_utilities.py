@@ -91,8 +91,9 @@ class Utilities:
         """expects driver's instance and selenium element, click on "see more" link to open hidden content"""
         try:
             #find element and click 'see more' button
-            element = content.find_element_by_class_name('see_more_link')
+            element = content.find_element_by_css_selector('span.see_more_link_inner')
             driver.execute_script("arguments[0].click();", element) #click button using js    
+        
         except NoSuchElementException:
             #if it doesn't exists than no need to raise any error
             pass

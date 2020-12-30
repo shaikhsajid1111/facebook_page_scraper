@@ -80,18 +80,18 @@ class Finder():
     
     @staticmethod
     def __find_content(post,driver):
-        """finds content of the facebook post using selenium's webdriver's method"""
+        """finds content of the facebook post using selenium's webdriver's method and returns string containing text of the posts"""
         try:
             post_content = post.find_element_by_css_selector('[data-testid="post_message"]')
             Utilities._Utilities__click_see_more(driver,post_content) #click 'see more' button to get hidden text as well
-            post_content = Scraping_utilities._Scraping_utilities__extract_content(post_content)
+            content = Scraping_utilities._Scraping_utilities__extract_content(post_content)
         except NoSuchElementException:
             pass
-            post_content = ""
+            content = ""
         except Exception as ex:
             print("error at find_content method : {}".format(ex))
-            post_content = ""
-        return post_content
+            content = ""
+        return content
 
     
     @staticmethod
