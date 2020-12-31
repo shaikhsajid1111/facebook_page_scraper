@@ -8,6 +8,7 @@ try:
     import json
     import csv
     import os
+
 except Exception as ex:
     print(ex)
 
@@ -90,7 +91,7 @@ class Facebook_scraper:
         fieldnames = ['id','name','shares','likes','loves','wow','cares','sad','angry','haha','reactions_count','comments','content','video'
                     ,'image','post_url']
         #open and start writing to CSV files
-        with open("{}.csv".format(filename),'w',newline='') as data_file:
+        with open("{}.csv".format(filename),'w',newline='',encoding="utf-8") as data_file:
             writer = csv.DictWriter(data_file,fieldnames=fieldnames) #instantiate DictWriter for writing CSV file 
 
             writer.writeheader() #write headers to CSV file
@@ -103,7 +104,8 @@ class Facebook_scraper:
                 'sad' : json_data[key]['reactions']['sad'],'angry' : json_data[key]['reactions']['angry'],
                 'haha' : json_data[key]['reactions']['haha'],'reactions_count' : json_data[key]['reaction_count'],
                 'comments'  : json_data[key]['comments'],'content' : json_data[key]['content'],
-                'video' : json_data[key]['video'],'image':json_data[key]['image'],'post_url' : json_data[key]['post_url']
+                'video' : json_data[key]['video'],'image': " ".join(json_data[key]['image']) 
+                ,'post_url' : json_data[key]['post_url']
                 }   
                 writer.writerow(row) #write row to CSV file
 
@@ -157,14 +159,18 @@ class Facebook_scraper:
                 shares = Finder._Finder__find_share(post)
                 #find all reactions 
                 reactions_all = Finder._Finder__find_reactions(post)
-                #find all anchor tags 
+                #find all anchor tags in reactions_all list
                 all_hrefs_in_react = reactions_all.find_elements_by_tag_name("a") if type(reactions_all) != str else ""
                 #if hrefs were found
+                #all_hrefs contains elements like
+                #["5 comments","54 Likes"] and so on
                 if type(all_hrefs_in_react) == list:
                     l = [i.get_attribute("aria-label") for i in all_hrefs_in_react]  
                 else:
                     l = []
+                #extract that aria-label from all_hrefs_in_react list and than extract number from them seperately
                 #if Like aria-label is in the list, than extract it and extract numbers from that text
+                
                 likes = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Like")
                 likes = Scraping_utilities._Scraping_utilities__extract_numbers(likes[0]) if len(likes) > 0 else 0
 
