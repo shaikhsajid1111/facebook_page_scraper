@@ -30,7 +30,7 @@ python3 setup.py install
 <p>Installing with pypi</p>
 
 ```
-pip3 install facebook_page_scraper
+pip3 install facebook-page-scraper
 ```
 <br>
 <hr>
