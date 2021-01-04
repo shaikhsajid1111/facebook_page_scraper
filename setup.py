@@ -1,11 +1,11 @@
 import setuptools
 
-with open("README.md","r") as file:
+with open("README.MD","r") as file:
     long_description = file.read()
 
 setuptools.setup(
     name = "facebook_page_scraper",
-    version = "0.1.0",
+    version = "0.1.1",
     author = "Sajid Shaikh",
     author_email = "shaikhsajid3732@gmail.com",
     description = "Python package to scrap facebook's pages front end with no limitations",

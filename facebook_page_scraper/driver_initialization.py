@@ -32,11 +32,11 @@ class Initializer:
     def set_driver_for_browser(self,browser_name):
         """expects browser name and returns a driver instance"""
         #if browser is suppose to be chrome 
-        if browser_name == "chrome":
+        if browser_name.lower() == "chrome":
             browser_option = ChromeOptions()
             #automatically installs chromedriver and initialize it and returns the instance
             return webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=self.set_properties(browser_option))
-        elif browser_name == "firefox":
+        elif browser_name.lower() == "firefox":
             browser_option = FirefoxOptions()
             #automatically installs geckodriver and initialize it and returns the instance
             return webdriver.Firefox(executable_path=GeckoDriverManager().install(),options=self.set_properties(browser_option))
