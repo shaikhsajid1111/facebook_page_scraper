@@ -193,9 +193,20 @@ class Facebook_scraper:
                 #if Haha aria-label is in the list, than extract it and extract numbers from that text
                 haha = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Haha")
                 haha = Scraping_utilities._Scraping_utilities__extract_numbers(haha[0]) if len(haha) > 0 else 0
-        
-                reactions = {"likes" : likes,"loves" : loves,"wow":wow,"cares" : cares,"sad":sad,"angry":
-                angry,"haha" : haha}
+
+                #converting all reactions to numbers
+                #e,g reactions may contain counts like "5k","5m", so converting them to actual number
+                likes = Scraping_utilities._Scraping_utilities__value_to_float(likes)
+                loves = Scraping_utilities._Scraping_utilities__value_to_float(loves)
+                wow = Scraping_utilities._Scraping_utilities__value_to_float(wow)
+                cares = Scraping_utilities._Scraping_utilities__value_to_float(cares)
+                sad = Scraping_utilities._Scraping_utilities__value_to_float(sad)
+                angry = Scraping_utilities._Scraping_utilities__value_to_float(angry)
+                haha = Scraping_utilities._Scraping_utilities__value_to_float(haha)
+                
+                reactions = {"likes" : int(likes),"loves" : int(loves),"wow":int(wow),"cares" : int(cares),"sad":int(sad),
+                "angry":
+                int(angry),"haha" : int(haha)}
 
                 #count number of total reactions 
                 total_reaction_count = Scraping_utilities._Scraping_utilities__count_reaction(reactions)

@@ -12,7 +12,7 @@ class Scraping_utilities:
         e.g => input = '54454 comment', than output => 54454
         """
         try:
-            return int(re.findall("\d+", string)[0])
+            return string.split(" ")[0]
         except IndexError:
             return 0
 
@@ -64,3 +64,23 @@ class Scraping_utilities:
         if "/videos/" in link:
             status = link.split("/")[5]
         return status
+    
+    @staticmethod
+    def __value_to_float(x):
+        try:
+            x = float(x)
+            return x
+        except:
+            pass    
+        x = x.lower()
+        if 'k' in x:
+            if len(x) > 1:
+                return float(x.replace('k', '')) * 1000
+            return 1000
+        if 'm' in x:
+            if len(x) > 1:
+                return float(x.replace('m', '')) * 1000000
+            return 1000000
+        if 'm' in x:
+            return float(x.replace('m', '')) * 1000000000
+        return 0
