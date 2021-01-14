@@ -5,7 +5,7 @@ with open("README.MD","r") as file:
 
 setuptools.setup(
     name = "facebook_page_scraper",
-    version = "0.1.2",
+    version = "0.1.3",
     author = "Sajid Shaikh",
     author_email = "shaikhsajid3732@gmail.com",
     description = "Python package to scrap facebook's pages front end with no limitations",
