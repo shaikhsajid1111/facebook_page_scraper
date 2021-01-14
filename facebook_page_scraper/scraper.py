@@ -157,6 +157,9 @@ class Facebook_scraper:
                 status = Finder._Finder__find_status(post)
                 #find share from the post
                 shares = Finder._Finder__find_share(post)
+                #converting shares to number
+                #e.g if 5k than it should be 5000
+                shares = int(Scraping_utilities._Scraping_utilities__value_to_float(shares))
                 #find all reactions 
                 reactions_all = Finder._Finder__find_reactions(post)
                 #find all anchor tags in reactions_all list
@@ -212,7 +215,7 @@ class Facebook_scraper:
                 total_reaction_count = Scraping_utilities._Scraping_utilities__count_reaction(reactions)
                 
                 comments = Finder._Finder__find_comments(post)
-                
+                comments = int(Scraping_utilities._Scraping_utilities__value_to_float(comments))
                 post_content = Finder._Finder__find_content(post,self.__driver)
                 #we get time in unix timestamp
                 posted_time = Finder._Finder__find_posted_time(post)
