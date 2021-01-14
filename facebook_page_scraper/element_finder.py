@@ -56,7 +56,7 @@ class Finder():
         """finds all reaction of the facebook post using selenium's webdriver's method"""
         try:
             #find element that have attribute aria-label as 'See who reacted to this
-            reactions_all = post.find_element_by_css_selector('[aria-label="See who reacted to this"]')
+            reactions_all = post.find_element_by_css_selector('span._1n9r._66lh')
         except NoSuchElementException:
             reactions_all = ""
         except Exception as ex:
