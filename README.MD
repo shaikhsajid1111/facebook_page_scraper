@@ -120,31 +120,30 @@ Output:
 ```javascript
 
 {
-    "1730063790503900": {
+    "1739843239525955": {
         "name": "Facebook AI",
-        "shares": 65,
+        "shares": 43,
         "reactions": {
-            "likes": 305,
-            "loves": 31,
-            "wow": 7,
+            "likes": 129,
+            "loves": 11,
+            "wow": 8,
             "cares": 0,
             "sad": 0,
             "angry": 0,
             "haha": 0
         },
-        "reaction_count": 343,
-        "comments": 11,
-        "content": "We\u2019re training computer vision models that leverage Transformers, a deep neural network architecture. Data-efficient image Transformers (DeiT) use less data and computing resources to produce high-performance image classification AI models.  We hope to advance the field of computer vision by sharing this work with the broader community, making large-scale systems that train AI models more accessible to researchers and engineers.",
-        "posted_on": "2020-12-24T04:05:27",
-        "video": "",
+        "reaction_count": 148,
+        "comments": 3,
+        "content": "We’re transitioning the Visdom project to the team at FOSSASIA. Visdom is a flexible tool for creating, organizing, and sharing visualizations of live, rich data. It aims to facilitate visualization of remote data with an emphasis on supporting scientific experimentation. We’re excited to see where the team, in collaboration with the developer and user community, take the project.",
+        "posted_on": "2021-01-05T17:22:54",
+        "video": "https://www.facebook.com/facebookai/videos/1739843239525955",
         "image": [
-            "https://scontent-bom1-2.xx.fbcdn.net/v/t39.2365-6/p540x282/131570013_988138305044034_3894567585410559092_n.png?_nc_cat=109&ccb=2&_nc_sid=eaa83b&_nc_ohc=mAeDelparrEAX-3Mk7E&_nc_ht=scontent-bom1-2.xx&_nc_tp=30&oh=3fedb0e3cea6ad6f934ca20f77bec624&oe=600CB4C9"
+            "https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-0/s526x296/135871741_1739843246192621_8564947121610203331_o.png?_nc_cat=108&ccb=2&_nc_sid=da1649&_nc_ohc=Hk7peLe8e-cAX_xLejp&_nc_ht=scontent-bom1-2.xx&_nc_tp=30&oh=856a17109cbc4a6657dbb68564dfc568&oe=60291FC7"
         ],
-        "post_url": "https://www.facebook.com/facebookai/posts/1730063790503900"
-    },    ...
+        "post_url": "https://www.facebook.com/facebookai/posts/1739843239525955"
+    }, ...
 
 }
-
 
 ```
 Output Structure for JSON format:
@@ -195,7 +194,8 @@ facebook_ai.scrap_to_csv(filename,directory)
 content of ```data_file.csv```:
 ```csv
 id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,content,video,image,post_url
-1730063790503900,Facebook AI,62,295,30,6,0,0,0,0,331,10,"We�re training computer vision models that leverage Transformers, a deep neural network architecture. Data-efficient image Transformers (DeiT) use less data and computing resources to produce high-performance image classification AI models.  We hope to advance the field of computer vision by sharing this work with the broader community, making large-scale systems that train AI models more accessible to researchers and engineers.",,https://scontent-bom1-2.xx.fbcdn.net/v/t39.2365-6/p540x282/131570013_988138305044034_3894567585410559092_n.png?_nc_cat=109&ccb=2&_nc_sid=eaa83b&_nc_ohc=mAeDelparrEAX9CTY7c&_nc_ht=scontent-bom1-2.xx&_nc_tp=30&oh=c54502f6b0d2063cf455d88d20fe8c57&oe=600CB4C9,https://www.facebook.com/facebookai/posts/1730063790503900
+1739843239525955,Facebook AI,43,129,11,8,0,0,0,0,148,3,"We’re transitioning the Visdom project to the team at FOSSASIA. Visdom is a flexible tool for creating, organizing, and sharing visualizations of live, rich data. It aims to facilitate visualization of remote data with an emphasis on supporting scientific experimentation. We’re excited to see where the team, in collaboration with the developer and user community, take the project.",https://www.facebook.com/facebookai/videos/1739843239525955,https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-0/s526x296/135871741_1739843246192621_8564947121610203331_o.png?_nc_cat=108&ccb=2&_nc_sid=da1649&_nc_ohc=Hk7peLe8e-cAX_xLejp&_nc_ht=scontent-bom1-2.xx&_nc_tp=30&oh=856a17109cbc4a6657dbb68564dfc568&oe=60291FC7,https://www.facebook.com/facebookai/posts/1739843239525955
+
 
 ...
 ```

@@ -36,6 +36,7 @@ class Scraping_utilities:
         """returns the text content of selenium element, else if content is string than returns a empty string"""
         if type(content) is not str:
             content = content.find_element_by_tag_name("p").get_attribute('textContent')
+            
         else:
             content = ""
         return content
@@ -51,20 +52,25 @@ class Scraping_utilities:
     @staticmethod
     def __extract_id_from_link(link):
         """expects the post's URL as a argument, and extracts out post_id from that URL"""
-        status = "NA"
-        #if url pattern container "/posts" 
-        if "posts/" in link:
-            status = link.split('/')[5].split('?')[0]
-        #if url pattern container "/photos"
-        elif "photos/" in link:
-            status = link.split("/")[-2]
-        else:
-            status = link.split('/')[-1].split('=')[-3].split('&')[0]
-        #if url pattern container "/videos"
-        if "/videos/" in link:
-            status = link.split("/")[5]
-        return status
-    
+        try:
+            status = "NA"
+            #if url pattern container "/posts" 
+            if "posts/" in link:
+                status = link.split('/')[5].split('?')[0]
+            #if url pattern container "/photos"
+            elif "photos/" in link:
+                status = link.split("/")[-2]
+            else:
+                status = link.split('/')[-1].split('=')[-3].split('&')[0]
+            #if url pattern container "/videos"
+            if "/videos/" in link:
+                status = link.split("/")[5]
+            return status
+        except IndexError:
+            pass
+        except Exception as ex:
+            print(ex)
+
     @staticmethod
     def __value_to_float(x):
         try:

@@ -82,7 +82,7 @@ class Facebook_scraper:
         #dict trimming, might happen that we find more posts than it was asked, so just trim it
         self.__data_dict = dict(list(self.__data_dict.items())[0:int(self.posts_count)])
         
-        return json.dumps(self.__data_dict)    
+        return json.dumps(self.__data_dict,ensure_ascii=False)
 
     def __json_to_csv(self,filename,json_data,directory):
         
