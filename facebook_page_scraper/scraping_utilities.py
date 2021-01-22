@@ -60,11 +60,13 @@ class Scraping_utilities:
             #if url pattern container "/photos"
             elif "photos/" in link:
                 status = link.split("/")[-2]
-            else:
-                status = link.split('/')[-1].split('=')[-3].split('&')[0]
             #if url pattern container "/videos"
             if "/videos/" in link:
                 status = link.split("/")[5]
+            elif "fbid=" in link:
+                status = link.split("=")[1].split("&")[0]
+            elif "group" in link:
+                status = link.split("/")[6] 
             return status
         except IndexError:
             pass

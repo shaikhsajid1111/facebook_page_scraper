@@ -30,7 +30,7 @@ class Finder():
             print("error at find_status method : {}".format(ex))
             status = "NA"
         
-        return status
+        return (status,status_link)
     
     @staticmethod
     def __find_share(post):

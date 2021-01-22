@@ -1,6 +1,12 @@
 <h1> Changelog </h1>
 
 <section>
+<h2> 0.1.5 <h2>
+<h3>Fixed</h3>
+<li>Fixed feature to scrap id from different URL pattern</li>
+
+<br>
+
 <h2> 0.1.4 <h2>
 <h3>Added</h3>
 <li> Support for emoji and other different languages(other than english) in output. It is no longer shown as a Unicode string.</li>

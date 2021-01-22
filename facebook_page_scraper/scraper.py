@@ -154,7 +154,7 @@ class Facebook_scraper:
         for post in all_posts:
             try:
                 #find post ID from post
-                status = Finder._Finder__find_status(post)
+                status,post_url = Finder._Finder__find_status(post)
                 #find share from the post
                 shares = Finder._Finder__find_share(post)
                 #converting shares to number
@@ -226,7 +226,7 @@ class Facebook_scraper:
                 
                 image = Finder._Finder__find_image_url(post)
                 
-                post_url = "https://www.facebook.com/{}/posts/{}".format(self.page_name,status)
+                #post_url = "https://www.facebook.com/{}/posts/{}".format(self.page_name,status)
                 
                 self.__data_dict[status] = {
                     "name" : name,
