@@ -38,6 +38,15 @@ class Utilities:
         except Exception as ex:
             #if any other error occured except the above one
             print("error at close_error_popup method : {}".format(ex))
+    
+    @staticmethod
+    def __scroll_down_half(driver):
+        try:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 2);") 
+        except Exception as ex:
+            #if any error occured than close the driver and exit
+            Utilities.__close_driver(driver)
+            print("error at scroll_down_half method : {}".format(ex))
 
     @staticmethod
     def __scroll_down(driver):
@@ -53,7 +62,7 @@ class Utilities:
     def __close_popup(driver):
         """expects driver's instance and closes modal that ask for login, by clicking "Not Now" button """
         try:
-            Utilities.__scroll_down(driver)  #try to scroll
+            Utilities.__scroll_down_half(driver)  #try to scroll
             #wait for popup to show
             WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID,'expanding_cta_close_button')))
             #grab "Not Now" button

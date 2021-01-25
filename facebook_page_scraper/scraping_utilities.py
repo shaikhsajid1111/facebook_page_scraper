@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 try:
-    import re
     from datetime import datetime as dt
 except Exception as ex:
     print(ex)
@@ -35,8 +34,11 @@ class Scraping_utilities:
     def __extract_content(content):
         """returns the text content of selenium element, else if content is string than returns a empty string"""
         if type(content) is not str:
-            content = content.find_element_by_tag_name("p").get_attribute('textContent')
-            
+            all_para = content.find_elements_by_tag_name("p")
+            paragraph = ''
+            for para in all_para:
+                paragraph += para.get_attribute("textContent")
+                content = paragraph
         else:
             content = ""
         return content

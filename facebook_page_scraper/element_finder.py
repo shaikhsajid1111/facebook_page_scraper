@@ -5,6 +5,8 @@ try:
     from .scraping_utilities import Scraping_utilities
     from .driver_utilities import Utilities    
     import sys
+    import urllib.request
+    import re
 except Exception as ex:
     print(ex)
 
@@ -79,14 +81,52 @@ class Finder():
         return comments       
     
     @staticmethod
+    def __fetch_post_passage(href):
+        
+        response = urllib.request.urlopen(href)
+        
+        text = response.read().decode('utf-8')
+
+        post_message_div_finder_regex = '<div data-testid="post_message" class=".*?" data-ft=".*?">(.*?)<\/div>'
+        
+        post_message = re.search(post_message_div_finder_regex,text)
+
+        replace_html_tags_regex = '<[^<>]+>'
+        message = re.sub(replace_html_tags_regex,'',post_message.group(0))
+        
+        return message
+
+    @staticmethod
+    def __element_exists(element,css_selector):
+        try:
+            found = element.find_element_by_css_selector(css_selector)
+            return True
+        except NoSuchElementException:
+            return False
+
+    @staticmethod
     def __find_content(post,driver):
         """finds content of the facebook post using selenium's webdriver's method and returns string containing text of the posts"""
         try:
-            post_content = post.find_element_by_css_selector('[data-testid="post_message"]')
-            Utilities._Utilities__click_see_more(driver,post_content) #click 'see more' button to get hidden text as well
-            content = Scraping_utilities._Scraping_utilities__extract_content(post_content)
+            post_content = post.find_element_by_class_name('userContent')
+            #if 'See more' or 'Continue reading' is present in post
+            if Finder._Finder__element_exists(post_content,"span.text_exposed_link > a"):
+                element = post_content.find_element_by_css_selector("span.text_exposed_link > a") #grab that element
+                #if element have already the onclick function, that means it is expandable paragraph
+                if element.get_attribute("onclick"):
+                    Utilities._Utilities__click_see_more(driver,post_content) #click 'see more' button to get hidden text as well
+                    content = Scraping_utilities._Scraping_utilities__extract_content(post_content) #extract content out of it
+                elif element.get_attribute("target"): #if element have attribute of target="_blank"
+                #if it does not have onclick() method, it means we'll to extract passage by request
+                #if content have attribute target="_blank" it indicates that text will open in new tab,
+                #so make a seperate request and get that text
+                    content = Finder._Finder__fetch_post_passage(element.get_attribute("href"))
+            else:
+                #if it does not have see more, just get the text out of it
+                content = post_content.get_attribute("textContent")
+             
         except NoSuchElementException:
-            pass
+            #if [data-testid="post_message"] is not found, it means that post did not had any text,either it is image or video
             content = ""
         except Exception as ex:
             print("error at find_content method : {}".format(ex))
@@ -160,7 +200,7 @@ class Finder():
     def __find_name(driver):
         """finds name of the facebook page using selenium's webdriver's method"""
         try:
-            name =  driver.find_element_by_class_name('_64-f').get_attribute('textContent')
+            name =  driver.find_element_by_css_selector('a._64-f').get_attribute('textContent')
             return name
         except Exception as ex:
             print("error at __find_name method : {}".format(ex))
