@@ -73,10 +73,12 @@ class Facebook_scraper:
             Utilities._Utilities__close_popup(self.__driver)
             
             self.__find_elements()
-
+            
             if self.__close_after_retry() is True:
                 #keep a check if posts are available, if retry is 0, than it breaks loop
                 break
+            Utilities._Utilities__scroll_down(self.__driver)  #scroll down 
+            
         #close the browser window after job is done.
         Utilities._Utilities__close_driver(self.__driver)
         #dict trimming, might happen that we find more posts than it was asked, so just trim it
