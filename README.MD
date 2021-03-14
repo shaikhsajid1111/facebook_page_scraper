@@ -430,8 +430,10 @@ URL for that post
 <li> <a href="https://pypi.org/project/webdriver-manager/" target='_blank'>webdriver manager</a>
 </ul>
 <br>
-<hr>
 
+<hr>
+If you encounter anything unusual please feel free to create issue <a href='https://github.com/shaikhsajid1111/facebook_page_scraper/issues'>here</a>
+<hr>
 
 <h2> LICENSE </h2>
 MIT
