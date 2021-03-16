@@ -66,19 +66,21 @@ class Facebook_scraper:
         #while scrolling, wait for login popup to show, it can be skipped by clicking "Not Now" button
         Utilities._Utilities__close_popup(self.__driver)
         
+        name = Finder._Finder__find_name(self.__driver) #find name element    
+
         while len(self.__data_dict) <= self.posts_count:
 
             #if during scrolling any of error or signup popup shows 
             Utilities._Utilities__close_error_popup(self.__driver)
             Utilities._Utilities__close_popup(self.__driver)
             
-            self.__find_elements()
+            self.__find_elements(name)
             
             if self.__close_after_retry() is True:
                 #keep a check if posts are available, if retry is 0, than it breaks loop
                 break
             Utilities._Utilities__scroll_down(self.__driver)  #scroll down 
-            
+            #print(len(self.__data_dict))
         #close the browser window after job is done.
         Utilities._Utilities__close_driver(self.__driver)
         #dict trimming, might happen that we find more posts than it was asked, so just trim it
@@ -90,7 +92,8 @@ class Facebook_scraper:
         
         os.chdir(directory) #change working directory to given directory
         #headers of the CSV file
-        fieldnames = ['id','name','shares','likes','loves','wow','cares','sad','angry','haha','reactions_count','comments','content','video'
+        fieldnames = ['id','name','shares','likes','loves','wow','cares','sad','angry','haha','reactions_count','comments',
+        'content','posted_on','video'
                     ,'image','post_url']
         #open and start writing to CSV files
         with open("{}.csv".format(filename),'w',newline='',encoding="utf-8") as data_file:
@@ -105,7 +108,7 @@ class Facebook_scraper:
                 'wow' : json_data[key]['reactions']['wow'],'cares' : json_data[key]['reactions']['cares'],
                 'sad' : json_data[key]['reactions']['sad'],'angry' : json_data[key]['reactions']['angry'],
                 'haha' : json_data[key]['reactions']['haha'],'reactions_count' : json_data[key]['reaction_count'],
-                'comments'  : json_data[key]['comments'],'content' : json_data[key]['content'],
+                'comments'  : json_data[key]['comments'],'content' : json_data[key]['content'],'posted_on' : json_data[key]['posted_on'],
                 'video' : json_data[key]['video'],'image': " ".join(json_data[key]['image']) 
                 ,'post_url' : json_data[key]['post_url']
                 }   
@@ -144,13 +147,12 @@ class Facebook_scraper:
             #if length of posts is 0,decrement retry by 1
             self.retry -= 1
         
-    def __find_elements(self):
+    def __find_elements(self,name):
         """find elements of posts and add them to data_dict"""
         all_posts = Finder._Finder__find_all_posts(self.__driver) #find all posts
         all_posts = self.__remove_duplicates(all_posts) #remove duplicates from the list
 
-        name = Finder._Finder__find_name(self.__driver) #find name element
-        
+    
         self.__no_post_found(all_posts)  #after removing duplicates if length is 0, retry will decrease by 1
         #iterate over all the posts and find details from the same
         for post in all_posts:

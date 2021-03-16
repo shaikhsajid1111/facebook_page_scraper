@@ -139,7 +139,8 @@ class Finder():
         """finds posted time of the facebook post using selenium's webdriver's method"""
         try:
             #extract element that looks like <abbr class='_5ptz' data-utime="some unix timestamp"> </abbr>
-            posted_time = post.find_element_by_css_selector("abbr._5ptz").get_attribute("data-utime")
+            #posted_time = post.find_element_by_css_selector("abbr._5ptz").get_attribute("data-utime")
+            posted_time = post.find_element_by_tag_name("abbr").get_attribute('data-utime')
         except Exception as ex:
             print("error at find_posted_time method : {}".format(ex))
             posted_time = ""
