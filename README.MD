@@ -193,10 +193,8 @@ facebook_ai.scrap_to_csv(filename,directory)
 
 content of ```data_file.csv```:
 ```csv
-id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,content,video,image,post_url
-1739843239525955,Facebook AI,43,129,11,8,0,0,0,0,148,3,"We’re transitioning the Visdom project to the team at FOSSASIA. Visdom is a flexible tool for creating, organizing, and sharing visualizations of live, rich data. It aims to facilitate visualization of remote data with an emphasis on supporting scientific experimentation. We’re excited to see where the team, in collaboration with the developer and user community, take the project.",https://www.facebook.com/facebookai/videos/1739843239525955,https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-0/s526x296/135871741_1739843246192621_8564947121610203331_o.png?_nc_cat=108&ccb=2&_nc_sid=da1649&_nc_ohc=Hk7peLe8e-cAX_xLejp&_nc_ht=scontent-bom1-2.xx&_nc_tp=30&oh=856a17109cbc4a6657dbb68564dfc568&oe=60291FC7,https://www.facebook.com/facebookai/posts/1739843239525955
-
-
+id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,content,posted_on,video,image,post_url
+1791700921006853,Facebook AI,45,150,19,5,0,0,0,0,174,8,"Facebook AI has built TimeSformer, an entirely new architecture for video understanding. It’s the first that’s based exclusively on the self-attention mechanism used in Transformers.  TimeSformer outperforms the state of the art while being more efficient than 3D ConvNets for video.",2021-03-15T17:14:30,,https://scontent-bom1-2.xx.fbcdn.net/v/t39.2365-6/p540x282/156274680_471569777206221_706631440205169419_n.jpg?_nc_cat=110&ccb=1-3&_nc_sid=eaa83b&_nc_ohc=eyfETEUuHzQAX8DqwMU&_nc_ht=scontent-bom1-2.xx&tp=6&oh=2e9c6490fe3ad19a398905b3b615c88b&oe=6075FFE4,https://www.facebook.com/FacebookAI/posts/1791700921006853?__xts__%5B0%5D=68.ARCfsjOoZa0yc0TPws1koBr9ezS44Xf6Up04CqOhWnoDqrO35NdIdgjNSTWBrsUtm_y7MamZTjc_-p2rTobXe5WvxWd_eywuSzt98B7Vaj5hobF4OTZhe7VRgVJJY1wxEeAJf4nCZSs1tF1gWJJ0s5pPUGMmJsfD1UM5a3eERo-2t1JnTBHOSYs9Xsj5fV0iL-FiWAms_2-9KNRGqoojg9KfSAlffh_qxL8ztgznqC1sxfcU6MwAqdPN2va_T8cez29ZvJ1Er1j26VR7pnpWGyTMuW5wMrNxC-pz_8pVls8uk0iDramIOA&__tn__=-R
 ...
 ```
 

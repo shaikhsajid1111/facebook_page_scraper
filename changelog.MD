@@ -1,10 +1,17 @@
 <h1> Changelog </h1>
 
 <section>
+<h2> 0.1.8 </h2>
+<h3>Fixed</h3>
+<li>Fixed error "name element not found" occuring to some specific users.</li>
+<li>Fixed CSV file missing <code> posted_on </code> column</li>
+<br>
+
 
 <h2> 0.1.7 </h2>
 <h3>Fixed</h3>
 <li>Only scrolling once while scraping, which created problem that only top few posts were scrapped. If user wants want more than 27 posts, it use to get strucked.</li>
+
 <br>
 
 
