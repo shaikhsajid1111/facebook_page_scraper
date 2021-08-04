@@ -3,9 +3,14 @@ import setuptools
 with open("README.MD","r") as file:
     long_description = file.read()
 
+requirements = []
+
+for line in open("requirements.txt",'r',encoding="utf-8").readlines():
+  requirements.append(line.replace("\n",""))
+
 setuptools.setup(
     name = "facebook_page_scraper",
-    version = "0.1.8",
+    version = "0.1.9",
     author = "Sajid Shaikh",
     author_email = "shaikhsajid3732@gmail.com",
     description = "Python package to scrap facebook's pages front end with no limitations",
@@ -30,14 +35,11 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX :: Linux",
-        "Operating System :: MacOS", 
+        "Operating System :: MacOS",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: WWW/HTTP"
 
     ],
     python_requires = ">=3.6",
-    install_requires=[
-        'selenium==3.141.0',
-        'webdriver-manager==3.2.2'
-    ]
+    install_requires=requirements
 )

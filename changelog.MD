@@ -1,4 +1,11 @@
 <h1> Changelog </h1>
+<section>
+<h2> 0.1.9 </h2>
+<h3>Added</h3>
+<li>Added feature for using proxy while scraping</li>
+
+<br>
+
 
 <section>
 <h2> 0.1.8 </h2>

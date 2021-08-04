@@ -18,7 +18,7 @@
 <h3> Installing from source: </h3>
 
 ```
-git clone https://github.com/shaikhsajid1111/facebook_page_scraper 
+git clone https://github.com/shaikhsajid1111/facebook_page_scraper
 ```
 
 <h4> Inside project's directory </h4>
@@ -47,12 +47,12 @@ from facebook_page_scraper import Facebook_scraper
 page_name = "facebookai"
 posts_count = 10
 browser = "firefox"
-
-facebook_ai = Facebook_scraper(page_name,posts_count,browser)
+proxy = "IP:PORT" #if proxy requires authentication then user:password@IP:PORT
+facebook_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy)
 
 ```
 
-<h3> Parameters for  <code>Facebook_scraper(page_name,posts_count,browser) </code> class </h3>
+<h3> Parameters for  <code>Facebook_scraper(page_name,posts_count,browser,proxy) </code> class </h3>
 <table>
 <th>
 <tr>
@@ -95,6 +95,18 @@ string
 </td>
 <td>
 which browser to use, either chrome or firefox. if not passed,default is chrome
+</td>
+</tr>
+
+<tr>
+<td>
+proxy(optional)
+</td>
+<td>
+string
+</td>
+<td>
+optional argument, if user wants to set proxy, if proxy requires authentication then the format will be <code> user:password@IP:PORT </code>
 </td>
 </tr>
 
@@ -152,7 +164,7 @@ Output Structure for JSON format:
 ``` javascript
 {
     "id": {
-        "name": string,    
+        "name": string,
         "shares": integer,
         "reactions": {
             "likes": integer,
@@ -321,7 +333,7 @@ reactions
 dictionary
 </td>
 <td>
-dictionary containing reactions as keys and its count as value. Keys => <code> ["likes","loves","wow","cares","sad","angry","haha"] </code> 
+dictionary containing reactions as keys and its count as value. Keys => <code> ["likes","loves","wow","cares","sad","angry","haha"] </code>
 </td>
 </tr>
 
