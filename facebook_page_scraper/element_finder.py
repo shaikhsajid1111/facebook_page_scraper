@@ -1,56 +1,110 @@
 #!/usr/bin/env python3
-
 try:
     from selenium.common.exceptions import NoSuchElementException
     from .scraping_utilities import Scraping_utilities
-    from .driver_utilities import Utilities    
+    from .driver_utilities import Utilities
     import sys
     import urllib.request
     import re
+    from dateutil.parser import parse
+    import dateutil
+    import datetime
 except Exception as ex:
     print(ex)
 
 class Finder():
     """
-    Holds the collections of methods that finds element of the facebook's posts using selenium's webdriver's methods  
+    Holds the collections of methods that finds element of the facebook's posts using selenium's webdriver's methods
     """
     @staticmethod
-    def __find_status(post):
+    def __get_status_link(link_list):
+      status = ""
+      for link in link_list:
+        link_value = link.get_attribute("href")
+        if "/posts/" in link_value and "/groups/" in link_value:
+            status = link
+            break
+        if "/posts/" in link_value:
+            status = link
+            break
+        if "/videos/pcb" in link_value:
+            status = link
+            break
+        elif "/photos/" in link_value:
+            # print(link_value)
+            status = link
+            break
+        if "fbid=" in link_value:
+            status = link
+            break
+        elif "/group/" in link_value:
+            # print(link_value)
+            status = link
+            break
+        if "/videos/" in link_value:
+            # print(link_value)
+            status = link
+            break
+        elif "/groups/" in link_value:
+            # print(link_value)
+            status = link
+            break
+      return status
+
+    @staticmethod
+    def __find_status(post,layout):
         """finds URL of the post, then extracts link from that URL and returns it"""
         try:
-            #aim is to find element that looks like <a href="URL" class="_5pcq"></a>
-            #after finding that element, get it's href value and pass it to different method that extracts post_id from that href
-            status_link = post.find_element_by_class_name("_5pcq").get_attribute("href")  
-            #extract out post id from post's url
-            status = Scraping_utilities._Scraping_utilities__extract_id_from_link(status_link)
-                           
+            link = None
+            if layout == "old":
+              #aim is to find element that looks like <a href="URL" class="_5pcq"></a>
+              #after finding that element, get it's href value and pass it to different method that extracts post_id from that href
+              status_link = post.find_element_by_class_name("_5pcq").get_attribute("href")
+              #extract out post id from post's url
+              status = Scraping_utilities._Scraping_utilities__extract_id_from_link(status_link)
+            elif layout == "new":
+              links = post.find_elements_by_css_selector("a[role='link']")
+              link = Finder.__get_status_link(links)
+              status_link = link.get_attribute('href')
+              print("Status Link: ",status_link)
+              status = Scraping_utilities._Scraping_utilities__extract_id_from_link(
+                  status_link)
         except NoSuchElementException:
             #if element is not found
             status = "NA"
-            
+
         except Exception as ex:
             print("error at find_status method : {}".format(ex))
             status = "NA"
-        
-        return (status,status_link)
-    
+
+        return (status,status_link,link)
+
     @staticmethod
-    def __find_share(post):
+    def __find_share(post,layout):
         """finds shares count of the facebook post using selenium's webdriver's method"""
         try:
-            #aim is to find element that have datatest-id attribute as UFI2SharesCount/root 
-            shares = post.find_element_by_css_selector("[data-testid='UFI2SharesCount/root']").get_attribute('textContent')
-            shares = Scraping_utilities._Scraping_utilities__extract_numbers(shares)
-            
+            if layout == "old":
+              #aim is to find element that have datatest-id attribute as UFI2SharesCount/root
+              shares = post.find_element_by_css_selector("[data-testid='UFI2SharesCount/root']").get_attribute('textContent')
+              shares = Scraping_utilities._Scraping_utilities__extract_numbers(shares)
+            elif layout == "new":
+              elements = post.find_elements_by_css_selector("div.gtad4xkn")
+              shares = "0"
+              for element in elements:
+                text = element.text
+                if "share" in text:
+                    shares = re.findall("\d+", text)[0]
+                    break
+            return shares
         except NoSuchElementException:
             #if element is not present that means there wasn't any shares
             shares = 0
-            
+
         except Exception as ex:
             print("error at find_share method : {}".format(ex))
             shares = 0
-            
-        
+
+
         return shares
 
     @staticmethod
@@ -58,42 +112,53 @@ class Finder():
         """finds all reaction of the facebook post using selenium's webdriver's method"""
         try:
             #find element that have attribute aria-label as 'See who reacted to this
-            reactions_all = post.find_element_by_css_selector('span._1n9r._66lh')
+            reactions_all = post.find_element_by_css_selector(
+                '[aria-label="See who reacted to this"]')
         except NoSuchElementException:
             reactions_all = ""
         except Exception as ex:
             print("error at find_reactions method : {}".format(ex))
         return reactions_all
-    
+
     @staticmethod
-    def __find_comments(post):
+    def __find_comments(post,layout):
         """finds comments count of the facebook post using selenium's webdriver's method"""
         try:
-            comments = post.find_element_by_css_selector("a._3hg-").get_attribute('textContent')
-            #extract numbers from text
-            comments = Scraping_utilities._Scraping_utilities__extract_numbers(comments)
+            comments = ""
+            if layout == "old":
+              comments = post.find_element_by_css_selector("a._3hg-").get_attribute('textContent')
+              #extract numbers from text
+              comments = Scraping_utilities._Scraping_utilities__extract_numbers(comments)
+            elif layout == "new":
+              elements = post.find_elements_by_css_selector("div.gtad4xkn")
+              comments = "0"
+              for element in elements:
+                text = element.text
+                if "comment" in text:
+                    comments = Scraping_utilities._Scraping_utilities__extract_numbers(
+                        comments)
         except NoSuchElementException:
             comments = 0
         except Exception as ex:
             print("error at find_comments method : {}".format(ex))
             comments = 0
 
-        return comments       
-    
+        return comments
+
     @staticmethod
     def __fetch_post_passage(href):
-        
+
         response = urllib.request.urlopen(href)
-        
+
         text = response.read().decode('utf-8')
 
         post_message_div_finder_regex = '<div data-testid="post_message" class=".*?" data-ft=".*?">(.*?)<\/div>'
-        
+
         post_message = re.search(post_message_div_finder_regex,text)
 
         replace_html_tags_regex = '<[^<>]+>'
         message = re.sub(replace_html_tags_regex,'',post_message.group(0))
-        
+
         return message
 
     @staticmethod
@@ -105,10 +170,13 @@ class Finder():
             return False
 
     @staticmethod
-    def __find_content(post,driver):
+    def __find_content(post,driver,layout):
         """finds content of the facebook post using selenium's webdriver's method and returns string containing text of the posts"""
         try:
-            post_content = post.find_element_by_class_name('userContent')
+            if layout == "old":
+              post_content = post.find_element_by_class_name('userContent')
+            elif layout == "new":
+              post_content = post.find_element_by_css_selector('[data-ad-preview="message"]')
             #if 'See more' or 'Continue reading' is present in post
             if Finder._Finder__element_exists(post_content,"span.text_exposed_link > a"):
                 element = post_content.find_element_by_css_selector("span.text_exposed_link > a") #grab that element
@@ -124,7 +192,7 @@ class Finder():
             else:
                 #if it does not have see more, just get the text out of it
                 content = post_content.get_attribute("textContent")
-             
+
         except NoSuchElementException:
             #if [data-testid="post_message"] is not found, it means that post did not had any text,either it is image or video
             content = ""
@@ -133,25 +201,39 @@ class Finder():
             content = ""
         return content
 
-    
+
     @staticmethod
-    def __find_posted_time(post):
+    def __find_posted_time(post,layout,link_element):
         """finds posted time of the facebook post using selenium's webdriver's method"""
         try:
             #extract element that looks like <abbr class='_5ptz' data-utime="some unix timestamp"> </abbr>
             #posted_time = post.find_element_by_css_selector("abbr._5ptz").get_attribute("data-utime")
-            posted_time = post.find_element_by_tag_name("abbr").get_attribute('data-utime')
+            if layout == "old":
+              posted_time = post.find_element_by_tag_name("abbr").get_attribute('data-utime')
+              return datetime.datetime.fromtimestamp(float(posted_time)).isoformat()
+            elif layout == "new":
+              aria_label_value = link_element.get_attribute("aria-label")
+              timestamp = parse(aria_label_value).isoformat() if len(
+                  aria_label_value) > 5 else Scraping_utilities._Scraping_utilities__convert_to_iso(aria_label_value)
+              return timestamp
+        except dateutil.parser._parser.ParserError:
+            timestamp = Scraping_utilities._Scraping_utilities__convert_to_iso(
+                aria_label_value)
+            return timestamp
+        except TypeError:
+            timestamp = ""
         except Exception as ex:
             print("error at find_posted_time method : {}".format(ex))
-            posted_time = ""
-        return posted_time
-    
+            timestamp = ""
+            return timestamp
+
+
     @staticmethod
     def __find_video_url(post,page_name,status):
         """finds video of the facebook post using selenium's webdriver's method"""
         try:
             #if video is found in the post, than create a video URL by concatenating post's id with page_name
-            video_element = post.find_element_by_tag_name("video") 
+            video_element = post.find_element_by_tag_name("video")
             video = "https://www.facebook.com/{}/videos/{}".format(page_name,status)
 
         except NoSuchElementException:
@@ -162,7 +244,7 @@ class Finder():
             print("error at find_video_url method : {}".format(ex))
 
         return video
-    
+
     @staticmethod
     def __find_image_url(post):
         """finds all image of the facebook post using selenium's webdriver's method"""
@@ -177,15 +259,19 @@ class Finder():
         except Exception as ex:
             print("error at find_image_url method : {}".format(ex))
             sources = []
-    
+
         return sources
 
     @staticmethod
-    def __find_all_posts(driver):
+    def __find_all_posts(driver,layout):
         """finds all posts of the facebook page using selenium's webdriver's method"""
         try:
             #find all posts that looks like <div class="userContentWrapper"> </div>
-            all_posts = driver.find_elements_by_css_selector("div.userContentWrapper")
+            if layout == "old":
+              all_posts = driver.find_elements_by_css_selector("div.userContentWrapper")
+            elif layout == "new":
+              all_posts = driver.find_elements_by_css_selector(
+                  '[aria-posinset]')
             return all_posts
         except NoSuchElementException:
             print("Cannot find any posts! Exiting!")
@@ -198,14 +284,40 @@ class Finder():
             sys.exit(1)
 
     @staticmethod
-    def __find_name(driver):
+    def __find_name(driver,layout):
         """finds name of the facebook page using selenium's webdriver's method"""
         try:
-            name =  driver.find_element_by_css_selector('a._64-f').get_attribute('textContent')
+            if layout == "old":
+              name =  driver.find_element_by_css_selector('a._64-f').get_attribute('textContent')
+            elif layout == "new":
+              name = driver.find_element_by_tag_name("strong").get_attribute("textContent")
             return name
         except Exception as ex:
             print("error at __find_name method : {}".format(ex))
-    
 
-   
-    
+    @staticmethod
+    def __detect_ui(driver):
+      try:
+        driver.find_element_by_id("pagelet_bluebar")
+        return "old"
+      except NoSuchElementException:
+        return "new"
+      except Exception as ex:
+        print("error art __detect_ui: {}".format(ex))
+        Utilities.__close_driver(driver)
+        sys.exit(1)
+
+    @staticmethod
+    def __find_reaction(layout, reactions_all):
+      try:
+        if layout == "old":
+          return reactions_all.find_elements_by_tag_name(
+              "a")
+        elif layout == "new":
+          return reactions_all.find_elements_by_tag_name(
+            "div")
+
+      except Exception as ex:
+        print("find_reaction", ex)
+        return ""
+

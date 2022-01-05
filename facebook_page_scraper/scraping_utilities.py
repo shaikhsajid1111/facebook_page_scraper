@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 try:
     from datetime import datetime as dt
+    import re
+    from datetime import datetime, timedelta
 except Exception as ex:
     print(ex)
 
@@ -11,7 +13,8 @@ class Scraping_utilities:
         e.g => input = '54454 comment', than output => 54454
         """
         try:
-            return string.split(" ")[0]
+            #return string.split(" ")[0]
+            return re.findall("\d+",string)[0]
         except IndexError:
             return 0
 
@@ -19,14 +22,14 @@ class Scraping_utilities:
     @staticmethod
     def __exists_in_list(li,word):
         """expects list and a element, returns all the occurence of element in the list.
-        e.g input => li = ['sajid','sajid','sajid','d','s'] with given word = 'sajid', 
+        e.g input => li = ['sajid','sajid','sajid','d','s'] with given word = 'sajid',
         output => ['sajid','sajid','sajid'] """
         return [substring for substring in li if word in substring]
-    
+
     @staticmethod
     def __convert_time(unix_timestamp):
         try:
-            return dt.utcfromtimestamp(float(unix_timestamp)).isoformat()        
+            return dt.utcfromtimestamp(float(unix_timestamp)).isoformat()
         except Exception as ex:
             print(ex)
 
@@ -46,7 +49,7 @@ class Scraping_utilities:
     @staticmethod
     def __count_reaction(dictionary):
         """expects a dictionary and returns sum of all values of dictionary.
-        e.g => 
+        e.g =>
         input dictionary = {"s":1,"d":34},
         output=> 35"""
         return sum(dictionary.values())
@@ -56,7 +59,7 @@ class Scraping_utilities:
         """expects the post's URL as a argument, and extracts out post_id from that URL"""
         try:
             status = "NA"
-            #if url pattern container "/posts" 
+            #if url pattern container "/posts"
             if "posts/" in link:
                 status = link.split('/')[5].split('?')[0]
             #if url pattern container "/photos"
@@ -68,7 +71,7 @@ class Scraping_utilities:
             elif "fbid=" in link:
                 status = link.split("=")[1].split("&")[0]
             elif "group" in link:
-                status = link.split("/")[6] 
+                status = link.split("/")[6]
             return status
         except IndexError:
             pass
@@ -81,7 +84,7 @@ class Scraping_utilities:
             x = float(x)
             return x
         except:
-            pass    
+            pass
         x = x.lower()
         if 'k' in x:
             if len(x) > 1:
@@ -94,3 +97,39 @@ class Scraping_utilities:
         if 'm' in x:
             return float(x.replace('m', '')) * 1000000000
         return 0
+
+    @staticmethod
+    def __find_reaction_by_text(l, string):
+      reaction = [substring for substring in l if string in substring]
+      reaction = re.findall(
+          "\d+", reaction[0])[0] if len(reaction) > 0 else "0"
+      return reaction
+
+    @staticmethod
+    def __convert_to_iso(t):
+        past_date = "Failed to fetch!"
+        if 'h' in t.lower() or "hr" in t.lower() or "hrs" in t.lower():
+            hours_to_subract = re.sub("\D", '', t)
+            # print(f"{hours_to_subract} subtracting hours\n")
+            past_date = datetime.today() - timedelta(hours=int(hours_to_subract))
+            # print(past_date.timestamp())
+            return past_date.isoformat()
+
+        if 'm' in t.lower() or "min" in t.lower() or "mins" in t.lower():
+            minutes_to_subtract = re.sub("\D", '', t)
+            past_date = datetime.now() - timedelta(minutes=int(minutes_to_subtract))
+            return past_date.isoformat()
+
+        if 's' in t.lower():
+            seconds_to_subtract = re.sub("\D", '', t)
+            past_date = datetime.now() - timedelta(seconds=int(seconds_to_subtract))
+            return past_date.isoformat()
+
+        elif 'd' in t.lower() or "ds" in t.lower():
+            days_to_subtract = re.sub("\D", '', t)
+            # print(f"{days_to_subtract} subtracting days\n")
+            past_date = datetime.today() - timedelta(days=int(days_to_subtract))
+            # print(past_date.timestamp())
+            return past_date.isoformat()
+        # print(f"time is : {t}")
+        return past_date
