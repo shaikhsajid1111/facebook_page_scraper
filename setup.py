@@ -10,7 +10,7 @@ for line in open("requirements.txt",'r',encoding="utf-8").readlines():
 
 setuptools.setup(
     name = "facebook_page_scraper",
-    version = "0.1.9",
+    version = "0.1.10",
     author = "Sajid Shaikh",
     author_email = "shaikhsajid3732@gmail.com",
     description = "Python package to scrap facebook's pages front end with no limitations",

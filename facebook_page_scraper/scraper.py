@@ -43,14 +43,22 @@ class Facebook_scraper:
     def __init__(self,page_name,posts_count=10,browser="chrome",proxy=None):
         self.page_name = page_name
         self.posts_count = int(posts_count)
-        self.URL = "https://en-gb.facebook.com/pg/{}/posts".format(self.page_name)
+        #self.URL = "https://en-gb.facebook.com/pg/{}/posts".format(self.page_name)
+        self.URL = "https://facebook.com/{}".format(self.page_name)
         self.browser = browser
         self.__driver = ''
         self.proxy = proxy
+        self.__layout = ''
 
     def __start_driver(self):
         """changes the class member __driver value to driver on call"""
         self.__driver = Initializer(self.browser,self.proxy).init()
+    def __handle_popup_old_layout(self,layout):
+        #while scrolling, wait for login popup to show, it can be skipped by clicking "Not Now" button
+        try:
+          Utilities._Utilities__close_popup(self.__driver)
+        except:
+          pass
 
     def scrap_to_json(self):
         #call the __start_driver and override class member __driver to webdriver's instance
@@ -58,30 +66,31 @@ class Facebook_scraper:
 
         #navigate to URL
         self.__driver.get(self.URL)
+
+        self.__layout = Finder._Finder__detect_ui(self.__driver)
         #sometimes we get popup that says "your request couldn't be processed", however
         #posts are loading in background if popup is closed, so call this method in case if it pops up.
         Utilities._Utilities__close_error_popup(self.__driver)
         #wait for post to load
-        Utilities._Utilities__wait_for_element_to_appear(self.__driver)
+        Utilities._Utilities__wait_for_element_to_appear(self.__driver,self.__layout)
         #scroll down to bottom most
-        Utilities._Utilities__scroll_down(self.__driver)
-        #while scrolling, wait for login popup to show, it can be skipped by clicking "Not Now" button
-        Utilities._Utilities__close_popup(self.__driver)
+        Utilities._Utilities__scroll_down(self.__driver,self.__layout)
+        self.__handle_popup_old_layout(self.__layout)
 
-        name = Finder._Finder__find_name(self.__driver) #find name element
+
+        name = Finder._Finder__find_name(self.__driver,self.__layout) #find name element
 
         while len(self.__data_dict) <= self.posts_count:
 
             #if during scrolling any of error or signup popup shows
             Utilities._Utilities__close_error_popup(self.__driver)
-            Utilities._Utilities__close_popup(self.__driver)
-
+            self.__handle_popup_old_layout(self.__layout)
             self.__find_elements(name)
 
             if self.__close_after_retry() is True:
                 #keep a check if posts are available, if retry is 0, than it breaks loop
                 break
-            Utilities._Utilities__scroll_down(self.__driver)  #scroll down
+            Utilities._Utilities__scroll_down(self.__driver, self.__layout)  #scroll down
             #print(len(self.__data_dict))
         #close the browser window after job is done.
         Utilities._Utilities__close_driver(self.__driver)
@@ -151,26 +160,25 @@ class Facebook_scraper:
 
     def __find_elements(self,name):
         """find elements of posts and add them to data_dict"""
-        all_posts = Finder._Finder__find_all_posts(self.__driver) #find all posts
+        all_posts = Finder._Finder__find_all_posts(self.__driver,self.__layout) #find all posts
         all_posts = self.__remove_duplicates(all_posts) #remove duplicates from the list
-
 
         self.__no_post_found(all_posts)  #after removing duplicates if length is 0, retry will decrease by 1
         #iterate over all the posts and find details from the same
         for post in all_posts:
             try:
                 #find post ID from post
-                status,post_url = Finder._Finder__find_status(post)
-
+                status,post_url,link_element = Finder._Finder__find_status(post,self.__layout)
                 #find share from the post
-                shares = Finder._Finder__find_share(post)
+                shares = Finder._Finder__find_share(post,self.__layout)
                 #converting shares to number
                 #e.g if 5k than it should be 5000
                 shares = int(Scraping_utilities._Scraping_utilities__value_to_float(shares))
                 #find all reactions
                 reactions_all = Finder._Finder__find_reactions(post)
                 #find all anchor tags in reactions_all list
-                all_hrefs_in_react = reactions_all.find_elements_by_tag_name("a") if type(reactions_all) != str else ""
+                all_hrefs_in_react = Finder._Finder__find_reaction(self.__layout,reactions_all,) if type(
+                    reactions_all) != str else ""
                 #if hrefs were found
                 #all_hrefs contains elements like
                 #["5 comments","54 Likes"] and so on
@@ -181,28 +189,25 @@ class Facebook_scraper:
                 #extract that aria-label from all_hrefs_in_react list and than extract number from them seperately
                 #if Like aria-label is in the list, than extract it and extract numbers from that text
 
-                likes = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Like")
-                likes = Scraping_utilities._Scraping_utilities__extract_numbers(likes[0]) if len(likes) > 0 else 0
+                likes = Scraping_utilities._Scraping_utilities__find_reaction_by_text(l,"Like")
 
                 #if Love aria-label is in the list, than extract it and extract numbers from that text
-                loves = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Love")
-                loves = Scraping_utilities._Scraping_utilities__extract_numbers(loves[0]) if len(loves) > 0 else 0
+                loves = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
+                    l, "Love")
 
                 #if Wow aria-label is in the list, than extract it and extract numbers from that text
-                wow = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Wow")
-                wow = Scraping_utilities._Scraping_utilities__extract_numbers(wow[0]) if len(wow) > 0 else 0
+                wow = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
+                    l, "Wow")
+
                 #if Care aria-label is in the list, than extract it and extract numbers from that text
-                cares = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Care")
-                cares = Scraping_utilities._Scraping_utilities__extract_numbers(cares[0]) if len(cares) > 0 else 0
+                cares = Scraping_utilities._Scraping_utilities__find_reaction_by_text(l,"Care")
                 #if Sad aria-label is in the list, than extract it and extract numbers from that text
-                sad = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Sad")
-                sad = Scraping_utilities._Scraping_utilities__extract_numbers(sad[0]) if len(sad) > 0 else 0
+                sad = Scraping_utilities._Scraping_utilities__find_reaction_by_text(l,"Sad")
                 #if Angry aria-label is in the list, than extract it and extract numbers from that text
-                angry = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Angry")
-                angry = Scraping_utilities._Scraping_utilities__extract_numbers(angry[0]) if len(angry) > 0 else 0
+                angry = Scraping_utilities._Scraping_utilities__find_reaction_by_text(l,"Angry")
                 #if Haha aria-label is in the list, than extract it and extract numbers from that text
-                haha = Scraping_utilities._Scraping_utilities__exists_in_list(l,"Haha")
-                haha = Scraping_utilities._Scraping_utilities__extract_numbers(haha[0]) if len(haha) > 0 else 0
+                haha = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
+                    l, "Haha")
 
                 #converting all reactions to numbers
                 #e,g reactions may contain counts like "5k","5m", so converting them to actual number
@@ -221,13 +226,11 @@ class Facebook_scraper:
                 #count number of total reactions
                 total_reaction_count = Scraping_utilities._Scraping_utilities__count_reaction(reactions)
 
-                comments = Finder._Finder__find_comments(post)
+                comments = Finder._Finder__find_comments(post,self.__layout)
                 comments = int(Scraping_utilities._Scraping_utilities__value_to_float(comments))
-                post_content = Finder._Finder__find_content(post,self.__driver)
-                #we get time in unix timestamp
-                posted_time = Finder._Finder__find_posted_time(post)
-                #convert that timestamp to ISO 8601
-                posted_time = Scraping_utilities._Scraping_utilities__convert_time(posted_time)
+                post_content = Finder._Finder__find_content(post,self.__driver,self.__layout)
+                #extract time
+                posted_time = Finder._Finder__find_posted_time(post,self.__layout,link_element)
 
                 video = Finder._Finder__find_video_url(post,self.page_name,status)
 
