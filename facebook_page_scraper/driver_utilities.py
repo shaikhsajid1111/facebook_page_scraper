@@ -91,6 +91,9 @@ class Utilities:
         try:
             if layout == "old":
               #wait for page to load so posts are visible
+              body = driver.find_element_by_css_selector("body")
+              for _ in range(randint(3, 5)):
+                body.send_keys(Keys.PAGE_DOWN)
               WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR,'.userContentWrapper')))
             elif layout == "new":
               WebDriverWait(driver, 30).until(
