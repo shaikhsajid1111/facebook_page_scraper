@@ -1,5 +1,12 @@
 <h1> Changelog </h1>
 <section>
+<h2> 0.1.10 </h2>
+<h3>Added</h3>
+<li>Support for new Facebook Layout</li>
+
+<br>
+<h1> Changelog </h1>
+<section>
 <h2> 0.1.9 </h2>
 <h3>Added</h3>
 <li>Added feature for using proxy while scraping</li>

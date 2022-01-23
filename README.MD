@@ -48,7 +48,7 @@ page_name = "facebookai"
 posts_count = 10
 browser = "firefox"
 proxy = "IP:PORT" #if proxy requires authentication then user:password@IP:PORT
-facebook_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy)
+meta_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy)
 
 ```
 
@@ -124,7 +124,7 @@ optional argument, if user wants to set proxy, if proxy requires authentication 
 ```python
 #call the scrap_to_json() method
 
-json_data = facebook_ai.scrap_to_json()
+json_data = meta_ai.scrap_to_json()
 print(json_data)
 
 ```
@@ -132,28 +132,28 @@ Output:
 ```javascript
 
 {
-    "1739843239525955": {
-        "name": "Facebook AI",
-        "shares": 43,
-        "reactions": {
-            "likes": 129,
-            "loves": 11,
-            "wow": 8,
-            "cares": 0,
-            "sad": 0,
-            "angry": 0,
-            "haha": 0
-        },
-        "reaction_count": 148,
-        "comments": 3,
-        "content": "We’re transitioning the Visdom project to the team at FOSSASIA. Visdom is a flexible tool for creating, organizing, and sharing visualizations of live, rich data. It aims to facilitate visualization of remote data with an emphasis on supporting scientific experimentation. We’re excited to see where the team, in collaboration with the developer and user community, take the project.",
-        "posted_on": "2021-01-05T17:22:54",
-        "video": "https://www.facebook.com/facebookai/videos/1739843239525955",
-        "image": [
-            "https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-0/s526x296/135871741_1739843246192621_8564947121610203331_o.png?_nc_cat=108&ccb=2&_nc_sid=da1649&_nc_ohc=Hk7peLe8e-cAX_xLejp&_nc_ht=scontent-bom1-2.xx&_nc_tp=30&oh=856a17109cbc4a6657dbb68564dfc568&oe=60291FC7"
-        ],
-        "post_url": "https://www.facebook.com/facebookai/posts/1739843239525955"
-    }, ...
+  "2024182624425347": {
+    "name": "Meta AI",
+    "shares": 0,
+    "reactions": {
+      "likes": 154,
+      "loves": 19,
+      "wow": 0,
+      "cares": 0,
+      "sad": 0,
+      "angry": 0,
+      "haha": 0
+    },
+    "reaction_count": 173,
+    "comments": 2,
+    "content": "We’ve built data2vec, the first general high-performance self-supervised algorithm for speech, vision, and text. We applied it to different modalities and found it matches or outperforms the best self-supervised algorithms. We hope this brings us closer to a world where computers can learn to solve many different tasks without supervision. Learn more and get the code:  https://ai.facebook.com/…/the-first-high-performance-self-s…",
+    "posted_on": "2022-01-20T22:43:35",
+    "video": "",
+    "image": [
+      "https://scontent-bom1-2.xx.fbcdn.net/v/t39.30808-6/s480x480/272147088_2024182621092014_6532581039236849529_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=8024bb&_nc_ohc=j4_1PAndJTIAX82OLNq&_nc_ht=scontent-bom1-2.xx&oh=00_AT9us__TvC9eYBqRyQEwEtYSit9r2UKYg0gFoRK7Efrhyw&oe=61F17B71"
+    ],
+    "post_url": "https://www.facebook.com/MetaAI/photos/a.360372474139712/2024182624425347/?type=3&__xts__%5B0%5D=68.ARBoSaQ-pAC_ApucZNHZ6R-BI3YUSjH4sXsfdZRQ2zZFOwgWGhjt6dmg0VOcmGCLhSFyXpecOY9g1A94vrzU_T-GtYFagqDkJjHuhoyPW2vnkn7fvfzx-ql7fsBYxL5DgQVSsiC1cPoycdCvHmi6BV5Sc4fKADdgDhdFvVvr-ttzXG1ng2DbLzU-XfSes7SAnrPs-gxjODPKJ7AdqkqkSQJ4HrsLgxMgcLFdCsE6feWL7rXjptVWegMVMthhJNVqO0JHu986XBfKKqB60aBFvyAzTSEwJD6o72GtnyzQ-BcH7JxmLtb2_A&__tn__=-R"
+  }, ...
 
 }
 
@@ -199,14 +199,14 @@ Output Structure for JSON format:
 
 filename = "data_file"  #file name without CSV extension,where data will be saved
 directory = "E:\data" #directory where CSV file will be saved
-facebook_ai.scrap_to_csv(filename,directory)
+meta_ai.scrap_to_csv(filename,directory)
 
 ```
 
 content of ```data_file.csv```:
 ```csv
 id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,content,posted_on,video,image,post_url
-1791700921006853,Facebook AI,45,150,19,5,0,0,0,0,174,8,"Facebook AI has built TimeSformer, an entirely new architecture for video understanding. It’s the first that’s based exclusively on the self-attention mechanism used in Transformers.  TimeSformer outperforms the state of the art while being more efficient than 3D ConvNets for video.",2021-03-15T17:14:30,,https://scontent-bom1-2.xx.fbcdn.net/v/t39.2365-6/p540x282/156274680_471569777206221_706631440205169419_n.jpg?_nc_cat=110&ccb=1-3&_nc_sid=eaa83b&_nc_ohc=eyfETEUuHzQAX8DqwMU&_nc_ht=scontent-bom1-2.xx&tp=6&oh=2e9c6490fe3ad19a398905b3b615c88b&oe=6075FFE4,https://www.facebook.com/FacebookAI/posts/1791700921006853?__xts__%5B0%5D=68.ARCfsjOoZa0yc0TPws1koBr9ezS44Xf6Up04CqOhWnoDqrO35NdIdgjNSTWBrsUtm_y7MamZTjc_-p2rTobXe5WvxWd_eywuSzt98B7Vaj5hobF4OTZhe7VRgVJJY1wxEeAJf4nCZSs1tF1gWJJ0s5pPUGMmJsfD1UM5a3eERo-2t1JnTBHOSYs9Xsj5fV0iL-FiWAms_2-9KNRGqoojg9KfSAlffh_qxL8ztgznqC1sxfcU6MwAqdPN2va_T8cez29ZvJ1Er1j26VR7pnpWGyTMuW5wMrNxC-pz_8pVls8uk0iDramIOA&__tn__=-R
+2024182624425347,Meta AI,0,154,19,0,0,0,0,0,173,2,"We’ve built data2vec, the first general high-performance self-supervised algorithm for speech, vision, and text. We applied it to different modalities and found it matches or outperforms the best self-supervised algorithms. We hope this brings us closer to a world where computers can learn to solve many different tasks without supervision. Learn more and get the code:  https://ai.facebook.com/…/the-first-high-performance-self-s…",2022-01-20T22:43:35,,https://scontent-bom1-2.xx.fbcdn.net/v/t39.30808-6/s480x480/272147088_2024182621092014_6532581039236849529_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=8024bb&_nc_ohc=j4_1PAndJTIAX82OLNq&_nc_ht=scontent-bom1-2.xx&oh=00_AT9us__TvC9eYBqRyQEwEtYSit9r2UKYg0gFoRK7Efrhyw&oe=61F17B71,https://www.facebook.com/MetaAI/photos/a.360372474139712/2024182624425347/?type=3&__xts__%5B0%5D=68.ARAse4eiZmZQDOZumNZEDR0tQkE5B6g50K6S66JJPccb-KaWJWg6Yz4v19BQFSZRMd04MeBmV24VqvqMB3oyjAwMDJUtpmgkMiITtSP8HOgy8QEx_vFlq1j-UEImZkzeEgSAJYINndnR5aSQn0GUwL54L3x2BsxEqL1lElL7SnHfTVvIFUDyNfAqUWIsXrkI8X5KjoDchUj7aHRga1HB5EE0x60dZcHogUMb1sJDRmKCcx8xisRgk5XzdZKCQDDdEkUqN-Ch9_NYTMtxlchz1KfR0w9wRt8y9l7E7BNhfLrmm4qyxo-ZpA&__tn__=-R
 ...
 ```
 
@@ -438,6 +438,7 @@ URL for that post
 <ul>
 <li> <a href="https://www.selenium.dev/" target='_blank'>selenium</a>
 <li> <a href="https://pypi.org/project/webdriver-manager/" target='_blank'>webdriver manager</a>
+<li> <a href="https://pypi.org/project/python-dateutil/" target='_blank'>python dateutil</a>
 </ul>
 <br>
 
