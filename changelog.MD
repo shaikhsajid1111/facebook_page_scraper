@@ -1,5 +1,14 @@
 <h1> Changelog </h1>
 <section>
+<h2> 2.0.0 </h2>
+<h3>Added</h3>
+<li>Timeout argument to set the maximum amount of time the bot should run in case if no post were found.</li>
+<h3>Changes</h3>
+<li>Updated selenium from version <code>3.141.0</code> to <code>4.1.0</code> </li>
+<h3>Fixed</h3>
+<li>Fixed issue of browser keep on scrolling above despite calling scroll down method, happening due to different multiple functions call  </li>
+<br>
+<section>
 <h2> 0.1.10 </h2>
 <h3>Added</h3>
 <li>Support for new Facebook Layout</li>

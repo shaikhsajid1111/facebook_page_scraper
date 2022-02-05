@@ -48,11 +48,12 @@ page_name = "facebookai"
 posts_count = 10
 browser = "firefox"
 proxy = "IP:PORT" #if proxy requires authentication then user:password@IP:PORT
-meta_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy)
+timeout = 600 #600 seconds
+meta_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy,timeout=timeout)
 
 ```
 
-<h3> Parameters for  <code>Facebook_scraper(page_name,posts_count,browser,proxy) </code> class </h3>
+<h3> Parameters for  <code>Facebook_scraper(page_name,posts_count,browser,proxy,timeout) </code> class </h3>
 <table>
 <th>
 <tr>
@@ -107,6 +108,18 @@ string
 </td>
 <td>
 optional argument, if user wants to set proxy, if proxy requires authentication then the format will be <code> user:password@IP:PORT </code>
+</td>
+</tr>
+<tr>
+<td>
+timeout
+</td>
+<td>
+integer
+</td>
+<td>
+The maximum amount of time the bot should run for. If not passed, the default timeout is set to 10 minutes
+ </code>
 </td>
 </tr>
 
