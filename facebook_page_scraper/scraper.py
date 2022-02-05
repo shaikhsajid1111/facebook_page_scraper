@@ -8,6 +8,7 @@ try:
     import json
     import csv
     import os
+    import time
 
 except Exception as ex:
     print(ex)
@@ -38,9 +39,8 @@ class Facebook_scraper:
     #on each iteration __close_after_retry is called to check if retry have turned to 0
     # if it returns true,it will break the loop. After coming out of loop,driver will be closed and it will return post whatever was found
 
-    retry = 10
 
-    def __init__(self,page_name,posts_count=10,browser="chrome",proxy=None):
+    def __init__(self,page_name,posts_count=10,browser="chrome",proxy=None,timeout=600):
         self.page_name = page_name
         self.posts_count = int(posts_count)
         #self.URL = "https://en-gb.facebook.com/pg/{}/posts".format(self.page_name)
@@ -49,21 +49,30 @@ class Facebook_scraper:
         self.__driver = ''
         self.proxy = proxy
         self.__layout = ''
+        self.timeout = timeout
 
     def __start_driver(self):
         """changes the class member __driver value to driver on call"""
         self.__driver = Initializer(self.browser,self.proxy).init()
-    def __handle_popup_old_layout(self,layout):
+    def __handle_popup(self,layout):
         #while scrolling, wait for login popup to show, it can be skipped by clicking "Not Now" button
         try:
-          Utilities._Utilities__close_popup(self.__driver)
-        except:
-          pass
+          if layout == "old":
+            #if during scrolling any of error or signup popup shows
+            Utilities._Utilities__close_error_popup(self.__driver)
+            Utilities._Utilities__close_popup(self.__driver)
+          elif layout == "new":
+            Utilities._Utilities__close_modern_layout_signup_modal(self.__driver)
+        except Exception as ex:
+          print(ex)
+
+    def __check_timeout(self,start_time,current_time):
+      return (current_time-start_time) > self.timeout
 
     def scrap_to_json(self):
         #call the __start_driver and override class member __driver to webdriver's instance
         self.__start_driver()
-
+        starting_time = time.time()
         #navigate to URL
         self.__driver.get(self.URL)
 
@@ -75,21 +84,18 @@ class Facebook_scraper:
         Utilities._Utilities__wait_for_element_to_appear(self.__driver,self.__layout)
         #scroll down to bottom most
         Utilities._Utilities__scroll_down(self.__driver,self.__layout)
-        self.__handle_popup_old_layout(self.__layout)
+        self.__handle_popup(self.__layout)
 
 
         name = Finder._Finder__find_name(self.__driver,self.__layout) #find name element
 
         while len(self.__data_dict) <= self.posts_count:
-
-            #if during scrolling any of error or signup popup shows
-            Utilities._Utilities__close_error_popup(self.__driver)
-            self.__handle_popup_old_layout(self.__layout)
+            self.__handle_popup(self.__layout)
             self.__find_elements(name)
-
-            if self.__close_after_retry() is True:
-                #keep a check if posts are available, if retry is 0, than it breaks loop
-                break
+            current_time = time.time()
+            if self.__check_timeout(starting_time,current_time) is True:
+              print("Timeout...")
+              break
             Utilities._Utilities__scroll_down(self.__driver, self.__layout)  #scroll down
             #print(len(self.__data_dict))
         #close the browser window after job is done.
@@ -163,7 +169,6 @@ class Facebook_scraper:
         all_posts = Finder._Finder__find_all_posts(self.__driver,self.__layout) #find all posts
         all_posts = self.__remove_duplicates(all_posts) #remove duplicates from the list
 
-        self.__no_post_found(all_posts)  #after removing duplicates if length is 0, retry will decrease by 1
         #iterate over all the posts and find details from the same
         for post in all_posts:
             try:
