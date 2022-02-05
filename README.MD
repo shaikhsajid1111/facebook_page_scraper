@@ -49,7 +49,7 @@ posts_count = 10
 browser = "firefox"
 proxy = "IP:PORT" #if proxy requires authentication then user:password@IP:PORT
 timeout = 600 #600 seconds
-meta_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy,timeout)
+meta_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy,timeout=timeout)
 
 ```
 
