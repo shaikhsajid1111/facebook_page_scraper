@@ -44,7 +44,7 @@ from facebook_page_scraper import Facebook_scraper
 
 #instantiate the Facebook_scraper class
 
-page_name = "facebookai"
+page_name = "metaai"
 posts_count = 10
 browser = "firefox"
 proxy = "IP:PORT" #if proxy requires authentication then user:password@IP:PORT
