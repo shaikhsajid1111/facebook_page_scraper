@@ -1,26 +1,27 @@
 import setuptools
 
-with open("README.md","r") as file:
+with open("README.md", "r") as file:
     long_description = file.read()
 
-requirements = []
+requirements = ['selenium==4.1.0',
+                'webdriver-manager==3.2.2',
+                'selenium-wire==4.3.1',
+                'python-dateutil==2.8.2']
 
-for line in open("requirements.txt",'r',encoding="utf-8").readlines():
-  requirements.append(line.replace("\n",""))
 
 setuptools.setup(
-    name = "facebook_page_scraper",
-    version = "2.0.2",
-    author = "Sajid Shaikh",
-    author_email = "shaikhsajid3732@gmail.com",
-    description = "Python package to scrap facebook's pages front end with no limitations",
-    long_description = long_description,
-    long_description_content_type = "text/markdown",
+    name="facebook_page_scraper",
+    version="3.0.0",
+    author="Sajid Shaikh",
+    author_email="shaikhsajid3732@gmail.com",
+    description="Python package to scrap facebook's pages front end with no limitations",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     license="MIT",
-    url = "https://github.com/shaikhsajid1111/facebook_page_scraper",
-    keywords = "web-scraping selenium facebook facebook-pages",
-    packages = setuptools.find_packages(),
-    classifiers = [
+    url="https://github.com/shaikhsajid1111/facebook_page_scraper",
+    keywords="web-scraping selenium facebook facebook-pages",
+    packages=setuptools.find_packages(),
+    classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Developers",
@@ -40,6 +41,6 @@ setuptools.setup(
         "Topic :: Internet :: WWW/HTTP"
 
     ],
-    python_requires = ">=3.6",
+    python_requires=">=3.6",
     install_requires=requirements
 )

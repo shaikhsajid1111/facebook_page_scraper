@@ -49,11 +49,12 @@ posts_count = 10
 browser = "firefox"
 proxy = "IP:PORT" #if proxy requires authentication then user:password@IP:PORT
 timeout = 600 #600 seconds
-meta_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy,timeout=timeout)
+headless = True
+meta_ai = Facebook_scraper(page_name, posts_count, browser, proxy=proxy, timeout=timeout, headless=headless)
 
 ```
 
-<h3> Parameters for  <code>Facebook_scraper(page_name,posts_count,browser,proxy,timeout) </code> class </h3>
+<h3> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless) </code> class </h3>
 <table>
 <th>
 <tr>
@@ -68,10 +69,10 @@ meta_ai = Facebook_scraper(page_name,posts_count,browser,proxy=proxy,timeout=tim
 page_name
 </td>
 <td>
-string
+String
 </td>
 <td>
-name of the facebook page
+Name of the facebook page
 </td>
 </tr>
 
@@ -80,10 +81,10 @@ name of the facebook page
 posts_count
 </td>
 <td>
-integer
+Integer
 </td>
 <td>
-number of posts to scrap, if not passed default is 10
+Number of posts to scrap, if not passed default is 10
 </td>
 </tr>
 
@@ -92,10 +93,10 @@ number of posts to scrap, if not passed default is 10
 browser
 </td>
 <td>
-string
+String
 </td>
 <td>
-which browser to use, either chrome or firefox. if not passed,default is chrome
+Which browser to use, either chrome or firefox. if not passed,default is chrome
 </td>
 </tr>
 
@@ -104,10 +105,10 @@ which browser to use, either chrome or firefox. if not passed,default is chrome
 proxy(optional)
 </td>
 <td>
-string
+String
 </td>
 <td>
-optional argument, if user wants to set proxy, if proxy requires authentication then the format will be <code> user:password@IP:PORT </code>
+Optional argument, if user wants to set proxy, if proxy requires authentication then the format will be <code> user:password@IP:PORT </code>
 </td>
 </tr>
 <tr>
@@ -115,10 +116,22 @@ optional argument, if user wants to set proxy, if proxy requires authentication 
 timeout
 </td>
 <td>
-integer
+Integer
 </td>
 <td>
 The maximum amount of time the bot should run for. If not passed, the default timeout is set to 10 minutes
+ </code>
+</td>
+</tr>
+<tr>
+<td>
+headless
+</td>
+<td>
+Boolean
+</td>
+<td>
+Whether to run browser in headless mode?. Default is True
  </code>
 </td>
 </tr>
@@ -212,7 +225,7 @@ Output Structure for JSON format:
 
 filename = "data_file"  #file name without CSV extension,where data will be saved
 directory = "E:\data" #directory where CSV file will be saved
-meta_ai.scrap_to_csv(filename,directory)
+meta_ai.scrap_to_csv(filename, directory)
 
 ```
 
@@ -228,7 +241,7 @@ id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,con
 <hr>
 <br>
 
-<h3> Parameters for  <code> scrap_to_csv(filename,directory) </code> method. </h3>
+<h3> Parameters for  <code> scrap_to_csv(filename, directory) </code> method. </h3>
 
 <table>
 <th>
@@ -244,11 +257,11 @@ id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,con
 filename
 </td>
 <td>
-string
+String
 </td>
 
 <td>
-name of the CSV file where post's data will be saved
+Name of the CSV file where post's data will be saved
 </td>
 
 </tr>
@@ -258,11 +271,11 @@ name of the CSV file where post's data will be saved
 directory
 </td>
 <td>
-string
+String
 </td>
 
 <td>
-directory where CSV file have to be stored.
+Directory where CSV file have to be stored.
 </td>
 
 </tr>
@@ -305,7 +318,7 @@ Description
 id
 </td>
 <td>
-string
+String
 </td>
 <td>
 Post Identifier(integer casted inside string)
@@ -319,7 +332,7 @@ Post Identifier(integer casted inside string)
 name
 </td>
 <td>
-string
+String
 </td>
 <td>
 Name of the page
@@ -331,10 +344,10 @@ Name of the page
 shares
 </td>
 <td>
-integer
+Integer
 </td>
 <td>
-share count of post
+Share count of post
 </td>
 </tr>
 
@@ -343,10 +356,10 @@ share count of post
 reactions
 </td>
 <td>
-dictionary
+Dictionary
 </td>
 <td>
-dictionary containing reactions as keys and its count as value. Keys => <code> ["likes","loves","wow","cares","sad","angry","haha"] </code>
+Dictionary containing reactions as keys and its count as value. Keys => <code> ["likes","loves","wow","cares","sad","angry","haha"] </code>
 </td>
 </tr>
 
@@ -355,10 +368,10 @@ dictionary containing reactions as keys and its count as value. Keys => <code> [
 reaction_count
 </td>
 <td>
-integer
+Integer
 </td>
 <td>
-total reaction count of post
+Total reaction count of post
 </td>
 </tr>
 
@@ -368,10 +381,10 @@ total reaction count of post
 comments
 </td>
 <td>
-integer
+Integer
 </td>
 <td>
-comments count of post
+Comments count of post
 </td>
 </tr>
 
@@ -380,10 +393,10 @@ comments count of post
 content
 </td>
 <td>
- string
+ String
 </td>
 <td>
-content of post as text
+Content of post as text
 </td>
 </tr>
 
@@ -392,7 +405,7 @@ content of post as text
 video
 </td>
 <td>
- string
+ String
 </td>
 <td>
 URL of video present in that post
@@ -405,10 +418,10 @@ URL of video present in that post
 image
 </td>
 <td>
- list
+ List
 </td>
 <td>
-python's list containing URLs of all images present in the post
+List containing URLs of all images present in the post
 </td>
 </tr>
 
@@ -417,10 +430,10 @@ python's list containing URLs of all images present in the post
 posted_on
 </td>
 <td>
-datetime
+Datetime
 </td>
 <td>
-time at which post was posted(in ISO 8601 format)
+Time at which post was posted(in ISO 8601 format)
 </td>
 </tr>
 
@@ -429,7 +442,7 @@ time at which post was posted(in ISO 8601 format)
 post_url
 </td>
 <td>
-string
+String
 </td>
 <td>
 URL for that post
@@ -449,9 +462,10 @@ URL for that post
 <h2> Tech </h2>
 <p>This project uses different libraries to work properly.</p>
 <ul>
-<li> <a href="https://www.selenium.dev/" target='_blank'>selenium</a>
-<li> <a href="https://pypi.org/project/webdriver-manager/" target='_blank'>webdriver manager</a>
-<li> <a href="https://pypi.org/project/python-dateutil/" target='_blank'>python dateutil</a>
+<li> <a href="https://www.selenium.dev/" target='_blank'>Selenium</a></li>
+<li> <a href="https://pypi.org/project/webdriver-manager/" target='_blank'>Webdriver Manager</a></li>
+<li> <a href="https://pypi.org/project/python-dateutil/" target='_blank'>Python Dateutil</a></li>
+<li> <a href="https://pypi.org/project/selenium-wire/" target='_blank'>Selenium-wire</a></li>
 </ul>
 <br>
 
