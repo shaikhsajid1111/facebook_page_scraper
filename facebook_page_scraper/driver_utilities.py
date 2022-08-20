@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from fileinput import close
-
 
 try:
     from selenium.webdriver.support.ui import WebDriverWait

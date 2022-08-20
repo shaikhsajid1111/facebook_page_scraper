@@ -4,7 +4,6 @@ try:
     from .driver_utilities import Utilities
     from .element_finder import Finder
     from .scraping_utilities import Scraping_utilities
-    from selenium.common.exceptions import NoSuchElementException
     import json
     import csv
     import os
