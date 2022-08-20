@@ -62,11 +62,14 @@ class Initializer:
                     'no_proxy': 'localhost, 127.0.0.1'
                 }
                 print("Using: {}".format(self.proxy))
-                return webdriver.Firefox(executable_path="D:\\Webdriver\\geckodriver.exe",
+                return webdriver.Firefox(executable_path=GeckoDriverManager().install(),
+                                         options=self.set_properties(
+                                             browser_option),
                                          options=self.set_properties(browser_option), seleniumwire_options=options)
 
             # automatically installs geckodriver and initialize it and returns the instance
-            return webdriver.Firefox(executable_path="D:\\Webdriver\\geckodriver.exe", options=self.set_properties(browser_option))
+            return webdriver.Firefox(executable_path=GeckoDriverManager().install(),
+                                     options=self.set_properties(browser_option), options=self.set_properties(browser_option))
         else:
             # if browser_name is not chrome neither firefox than raise an exception
             raise Exception("Browser not supported!")
