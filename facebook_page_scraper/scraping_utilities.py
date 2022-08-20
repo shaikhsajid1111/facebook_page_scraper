@@ -3,8 +3,10 @@ try:
     from datetime import datetime as dt
     import re
     from datetime import datetime, timedelta
+    from selenium.webdriver.common.by import By
 except Exception as ex:
     print(ex)
+
 
 class Scraping_utilities:
     @staticmethod
@@ -13,14 +15,13 @@ class Scraping_utilities:
         e.g => input = '54454 comment', than output => 54454
         """
         try:
-            #return string.split(" ")[0]
-            return re.findall("\d+",string)[0]
+            # return string.split(" ")[0]
+            return re.findall("\d+", string)[0]
         except IndexError:
             return 0
 
-
     @staticmethod
-    def __exists_in_list(li,word):
+    def __exists_in_list(li, word):
         """expects list and a element, returns all the occurence of element in the list.
         e.g input => li = ['sajid','sajid','sajid','d','s'] with given word = 'sajid',
         output => ['sajid','sajid','sajid'] """
@@ -37,7 +38,7 @@ class Scraping_utilities:
     def __extract_content(content):
         """returns the text content of selenium element, else if content is string than returns a empty string"""
         if type(content) is not str:
-            all_para = content.find_elements_by_tag_name("p")
+            all_para = content.find_elements(By.TAG_NAME, "p")
             paragraph = ''
             for para in all_para:
                 paragraph += para.get_attribute("textContent")
@@ -59,13 +60,13 @@ class Scraping_utilities:
         """expects the post's URL as a argument, and extracts out post_id from that URL"""
         try:
             status = "NA"
-            #if url pattern container "/posts"
+            # if url pattern container "/posts"
             if "posts/" in link:
                 status = link.split('/')[5].split('?')[0]
-            #if url pattern container "/photos"
+            # if url pattern container "/photos"
             elif "photos/" in link:
                 status = link.split("/")[-2]
-            #if url pattern container "/videos"
+            # if url pattern container "/videos"
             if "/videos/" in link:
                 status = link.split("/")[5]
             elif "fbid=" in link:
@@ -100,10 +101,10 @@ class Scraping_utilities:
 
     @staticmethod
     def __find_reaction_by_text(l, string):
-      reaction = [substring for substring in l if string in substring]
-      reaction = re.findall(
-          "\d+", reaction[0])[0] if len(reaction) > 0 else "0"
-      return reaction
+        reaction = [substring for substring in l if string in substring]
+        reaction = re.findall(
+            "\d+", reaction[0])[0] if len(reaction) > 0 else "0"
+        return reaction
 
     @staticmethod
     def __convert_to_iso(t):
