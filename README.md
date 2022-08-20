@@ -465,7 +465,7 @@ URL for that post
 <li> <a href="https://www.selenium.dev/" target='_blank'>Selenium</a></li>
 <li> <a href="https://pypi.org/project/webdriver-manager/" target='_blank'>Webdriver Manager</a></li>
 <li> <a href="https://pypi.org/project/python-dateutil/" target='_blank'>Python Dateutil</a></li>
-<li> <a href="https://pypi.org/project/python-dateutil/" target='_blank'>Selenium-wire</a></li>
+<li> <a href="https://pypi.org/project/selenium-wire/" target='_blank'>Selenium-wire</a></li>
 </ul>
 <br>
 
