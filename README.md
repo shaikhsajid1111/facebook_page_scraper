@@ -225,7 +225,7 @@ Output Structure for JSON format:
 
 filename = "data_file"  #file name without CSV extension,where data will be saved
 directory = "E:\data" #directory where CSV file will be saved
-meta_ai.scrap_to_csv(filename,directory)
+meta_ai.scrap_to_csv(filename, directory)
 
 ```
 
