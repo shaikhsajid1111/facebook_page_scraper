@@ -68,7 +68,8 @@ class Finder():
                     status_link)
             elif layout == "new":
                 #links = post.find_elements(By.CSS_SELECTOR,"a[role='link']")
-                link = post.find_element(By.CSS_SELECTOR, 'a[aria-label]')
+                link = post.find_element(
+                    By.CSS_SELECTOR, '.jxuftiz4.cxfqmxzd.tes86rjd')
                 status_link = link.get_attribute('href')
                 status = Scraping_utilities._Scraping_utilities__extract_id_from_link(
                     status_link)
@@ -89,11 +90,12 @@ class Finder():
             if layout == "old":
                 # aim is to find element that have datatest-id attribute as UFI2SharesCount/root
                 shares = post.find_element(
-                    By.CSS_SELECTOR, "[data-testid='UFI2SharesCount/root']").get_attribute('textContent')
+                    By.CSS_SELECTOR, "._355t._4vn2").get_attribute('textContent')
                 shares = Scraping_utilities._Scraping_utilities__extract_numbers(
                     shares)
             elif layout == "new":
-                elements = post.find_elements(By.CSS_SELECTOR, "div.gtad4xkn")
+                elements = post.find_elements(
+                    By.CSS_SELECTOR, "span.oog5qr5w.tes86rjd.rtxb060y")
                 shares = "0"
                 for element in elements:
                     text = element.text
@@ -181,29 +183,47 @@ class Finder():
         try:
             if layout == "old":
                 post_content = post.find_element(By.CLASS_NAME, 'userContent')
+                # if 'See more' or 'Continue reading' is present in post
+                if Finder._Finder__element_exists(post_content, "span.text_exposed_link > a"):
+                    element = post_content.find_element(
+                        By.CSS_SELECTOR, "span.text_exposed_link > a")  # grab that element
+                    # if element have already the onclick function, that means it is expandable paragraph
+                    if element.get_attribute("onclick"):
+                        # click 'see more' button to get hidden text as well
+                        Utilities._Utilities__click_see_more(
+                            driver, post_content)
+                        content = Scraping_utilities._Scraping_utilities__extract_content(
+                            post_content)  # extract content out of it
+                    # if element have attribute of target="_blank"
+                    elif element.get_attribute("target"):
+                        # if it does not have onclick() method, it means we'll to extract passage by request
+                        # if content have attribute target="_blank" it indicates that text will open in new tab,
+                        # so make a seperate request and get that text
+                        content = Finder._Finder__fetch_post_passage(
+                            element.get_attribute("href"))
+                    else:
+                        content = post_content.get_attribute("textContent")
+                else:
+                    # if it does not have see more, just get the text out of it
+                    content = post_content.get_attribute("textContent")
             elif layout == "new":
                 post_content = post.find_element(
                     By.CSS_SELECTOR, '[data-ad-preview="message"]')
-            # if 'See more' or 'Continue reading' is present in post
-            if Finder._Finder__element_exists(post_content, "span.text_exposed_link > a"):
-                element = post_content.find_element(
-                    By.CSS_SELECTOR, "span.text_exposed_link > a")  # grab that element
-                # if element have already the onclick function, that means it is expandable paragraph
-                if element.get_attribute("onclick"):
-                    # click 'see more' button to get hidden text as well
-                    Utilities._Utilities__click_see_more(driver, post_content)
-                    content = Scraping_utilities._Scraping_utilities__extract_content(
-                        post_content)  # extract content out of it
-                # if element have attribute of target="_blank"
-                elif element.get_attribute("target"):
-                    # if it does not have onclick() method, it means we'll to extract passage by request
-                    # if content have attribute target="_blank" it indicates that text will open in new tab,
-                    # so make a seperate request and get that text
-                    content = Finder._Finder__fetch_post_passage(
-                        element.get_attribute("href"))
-            else:
-                # if it does not have see more, just get the text out of it
-                content = post_content.get_attribute("textContent")
+                # if "See More" button exists
+                if Finder._Finder__element_exists(post_content, "div.pbevjfx6.innypi6y"):
+                    element = post_content.find_element(
+                        By.CSS_SELECTOR, "div.pbevjfx6.innypi6y")  # grab that element
+                    if element.get_attribute("target"):
+                        content = Finder._Finder__fetch_post_passage(
+                            element.get_attribute("href"))
+                    else:
+                        Utilities._Utilities__click_see_more(
+                            driver, post_content, 'div.pbevjfx6.innypi6y')
+                        content = post_content.get_attribute(
+                            "textContent")  # extract content out of it
+                else:
+                    # if it does not have see more, just get the text out of it
+                    content = post_content.get_attribute("textContent")
 
         except NoSuchElementException:
             # if [data-testid="post_message"] is not found, it means that post did not had any text,either it is image or video
