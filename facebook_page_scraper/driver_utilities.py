@@ -135,12 +135,16 @@ class Utilities:
             Utilities.__close_driver(driver)
 
     @staticmethod
-    def __click_see_more(driver, content):
+    def __click_see_more(driver, content, selector=None):
         """expects driver's instance and selenium element, click on "see more" link to open hidden content"""
         try:
-            # find element and click 'see more' button
-            element = content.find_element(
-                By.CSS_SELECTOR, 'span.see_more_link_inner')
+            if not selector:
+                # find element and click 'see more' button
+                element = content.find_element(
+                    By.CSS_SELECTOR, 'span.see_more_link_inner')
+            else:
+                element = content.find_element(By.CSS_SELECTOR,
+                                               selector)
             # click button using js
             driver.execute_script("arguments[0].click();", element)
 
