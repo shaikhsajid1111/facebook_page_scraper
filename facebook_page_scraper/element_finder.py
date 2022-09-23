@@ -58,6 +58,7 @@ class Finder():
         """finds URL of the post, then extracts link from that URL and returns it"""
         try:
             link = None
+            status_link = None
             if layout == "old":
                 # aim is to find element that looks like <a href="URL" class="_5pcq"></a>
                 # after finding that element, get it's href value and pass it to different method that extracts post_id from that href
@@ -306,7 +307,7 @@ class Finder():
                     By.CSS_SELECTOR, "div.userContentWrapper")
             elif layout == "new":
                 all_posts = driver.find_elements(
-                    By.CSS_SELECTOR, '[aria-posinset]')
+                    By.CSS_SELECTOR, 'div[role="article"]')
             return all_posts
         except NoSuchElementException:
             print("Cannot find any posts! Exiting!")

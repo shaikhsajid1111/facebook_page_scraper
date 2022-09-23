@@ -184,6 +184,8 @@ class Facebook_scraper:
                 # find post ID from post
                 status, post_url, link_element = Finder._Finder__find_status(
                     post, self.__layout)
+                if post_url is None:
+                  continue
                 # find share from the post
                 shares = Finder._Finder__find_share(post, self.__layout)
                 # converting shares to number
