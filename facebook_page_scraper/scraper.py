@@ -117,11 +117,16 @@ class Facebook_scraper:
         fieldnames = ['id', 'name', 'shares', 'likes', 'loves', 'wow', 'cares', 'sad', 'angry', 'haha', 'reactions_count', 'comments',
                       'content', 'posted_on', 'video', 'image', 'post_url']
         # open and start writing to CSV files
-        with open("{}.csv".format(filename), 'w', newline='', encoding="utf-8") as data_file:
+        mode = 'w'
+        if os.path.exists("{}.csv".format(filename)):
+          #if the CSV file already exists then switch to append mode
+          mode = 'a'
+        with open("{}.csv".format(filename), mode, newline='', encoding="utf-8") as data_file:
             # instantiate DictWriter for writing CSV file
             writer = csv.DictWriter(data_file, fieldnames=fieldnames)
-
-            writer.writeheader()  # write headers to CSV file
+            if mode == 'w':
+              #if writing mode is
+              writer.writeheader()  # write headers to CSV file
             # iterate over entire dictionary, write each posts as a row to CSV file
             for key in json_data:
                 # parse post in a dictionary and write it as a single row
