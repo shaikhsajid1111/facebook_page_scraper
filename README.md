@@ -11,7 +11,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a>Getting Started</a>
+      <a href="#">Getting Started</a>
       <ul>
         <li><a href="#Prerequisites">Prerequisites</a></li>
         <li><a href="#Installation">Installation</a>
@@ -22,9 +22,9 @@
         </li>
       </ul>
     </li>
-    <li><a href="#Usage">Usage</a>
+    <li><a href="#Usage">Usage</a></li>
     <ul>
-    <li><a href="#instantiation">How to instantiate?</a>
+    <li><a href="#instantiation">How to instantiate?</a></li>
     <ul>
     <li><a href="#scraperParameters">Parameters for <code>Facebook_scraper()</code></a></li>
     <li><a href="#JSONWay">Scrape in JSON format</a>
@@ -34,6 +34,7 @@
     <ul><li><a href="#csvParameter">Parameters for scrape_to_csv() method</a></li></ul>
     </li>
     <li><a href="#outputKeys">Keys of the output data</a></li>
+    </ul>
     </ul>
     <li><a href="#tech">Tech</a></li>
     <li><a href="#license">License</a></li>
