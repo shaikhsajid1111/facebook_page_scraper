@@ -24,7 +24,7 @@
     </li>
     <li><a href="#Usage">Usage</a>
     <ul>
-    <li><a href="#page">How to instantiate?</a>
+    <li><a href="#instantiation">How to instantiate?</a>
     <ul>
     <li><a href="#parameters">Parameters for <code>Facebook_scraper()</code></a></li>
     <li><a href="#JSONWay">Scrape in JSON format</a>
@@ -71,7 +71,7 @@ pip3 install facebook-page-scraper
 ```
 <br>
 <hr>
-<h2 id="page"> How to use? </h2>
+<h2 id="instantiation"> How to use? </h2>
 
 
 
