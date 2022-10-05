@@ -26,7 +26,7 @@
     <ul>
     <li><a href="#instantiation">How to instantiate?</a>
     <ul>
-    <li><a href="#parameters">Parameters for <code>Facebook_scraper()</code></a></li>
+    <li><a href="#scraperParameters">Parameters for <code>Facebook_scraper()</code></a></li>
     <li><a href="#JSONWay">Scrape in JSON format</a>
     <ul><li><a href="#jsonOutput">JSON Output Format</a></li></ul>
     </li>
@@ -91,7 +91,7 @@ meta_ai = Facebook_scraper(page_name, posts_count, browser, proxy=proxy, timeout
 
 ```
 
-<h3 id="parameters"> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless, browser_profile) </code> class </h3>
+<h3 id="scraperParameters"> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless, browser_profile) </code> class </h3>
 <table>
 <th>
 <tr>
