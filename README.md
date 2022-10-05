@@ -3,7 +3,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)](https://github.com/shaikhsajid1111/facebook_page_scraper/graphs/commit-activity)
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://opensource.org/licenses/MIT) [![Python >=3.6.9](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
-<p> No registration, No need of API key, No limitation on number of requests. Import the library and <b> Just Do It !<b> </p>
+<p> No need of API key, No limitation on number of requests. Import the library and <b> Just Do It !<b> </p>
 
 <h2> Prerequisites </h2>
 
@@ -133,6 +133,18 @@ Boolean
 <td>
 Whether to run browser in headless mode?. Default is True
  </code>
+</td>
+</tr>
+
+<tr>
+<td>
+browser_profile
+</td>
+<td>
+String
+</td>
+<td>
+Path to the browser profile where cookies are stored and can be used for scraping data in an authenticated way.
 </td>
 </tr>
 
@@ -405,7 +417,7 @@ Content of post as text
 video
 </td>
 <td>
- String
+ List
 </td>
 <td>
 URL of video present in that post
@@ -452,12 +464,7 @@ URL for that post
 
 </table>
 <br>
-<hr>
-<h2> Privacy </h2>
 
-<p> This scraper only scrapes public data available to unauthenticated user and does not holds the capability to scrap anything private. </p>
-
-<br>
 <hr>
 <h2> Tech </h2>
 <p>This project uses different libraries to work properly.</p>
