@@ -54,7 +54,7 @@ meta_ai = Facebook_scraper(page_name, posts_count, browser, proxy=proxy, timeout
 
 ```
 
-<h3> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless) </code> class </h3>
+<h3> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless, browser_profile) </code> class </h3>
 <table>
 <th>
 <tr>
