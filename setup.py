@@ -11,7 +11,7 @@ requirements = ['selenium==4.1.0',
 
 setuptools.setup(
     name="facebook_page_scraper",
-    version="3.0.3",
+    version="4.0.0",
     author="Sajid Shaikh",
     author_email="shaikhsajid3732@gmail.com",
     description="Python package to scrap facebook's pages front end with no limitations",

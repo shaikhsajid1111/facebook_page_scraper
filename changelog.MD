@@ -1,6 +1,35 @@
 <h1> Changelog </h1>
 
 <section>
+<h2>4.0.0</h2>
+<h3>Added:</h3>
+<li>Feature to set browser profile so data can be scraped in authenticated way.</li>
+<li>Improved consistent, clear logs for better understanding.</li>
+<li>Changed the <code>video</code> field from string to list.</li>
+<li>Added Table Of Content in README.</li>
+<h3>Updated:</h3>
+<li>Outdated selectors.</li>
+<li>Updated README with the new parameter.</li>
+</section>
+<br>
+<hr>
+<section>
+<h2>3.0.1</h2>
+<h3>Fixed:</h3>
+<li>Update the outdated selector to the latest Facebook layout.</li>
+<li>Resolve the previous data use to get erased while scraping with the <code>scrap_to_csv</code> method <a href="https://github.com/shaikhsajid1111/facebook_page_scraper/issues/28">#28</a> </li>
+</section>
+<br>
+<hr>
+<section>
+<h2>3.0.1</h2>
+<h3>Added:</h3>
+<h3>Fixed:</h3>
+<li>Update the outdated selector to the latest Facebook layout.</li>
+</section>
+<br>
+<hr>
+<section>
 <h2>3.0.0</h2>
 <h3>Added:</h3>
 <li>Feature to control, whether to run the browser in headless or headful mode.</li>

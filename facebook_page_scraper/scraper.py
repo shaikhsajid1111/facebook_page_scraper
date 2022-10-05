@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-try:
-    from .driver_initialization import Initializer
-    from .driver_utilities import Utilities
-    from .element_finder import Finder
-    from .scraping_utilities import Scraping_utilities
-    import json
-    import csv
-    import os
-    import time
+from .driver_initialization import Initializer
+from .driver_utilities import Utilities
+from .element_finder import Finder
+from .scraping_utilities import Scraping_utilities
+import json
+import csv
+import os
+import time
+import logging
 
-except Exception as ex:
-    print(ex)
-
+logger = logging.getLogger(__name__)
+format = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+ch = logging.StreamHandler()
+ch.setFormatter(format)
+logger.addHandler(ch)
 
 class Facebook_scraper:
     __data_dict = {}  # this dictionary stores all post's data
@@ -38,7 +41,7 @@ class Facebook_scraper:
     # on each iteration __close_after_retry is called to check if retry have turned to 0
     # if it returns true,it will break the loop. After coming out of loop,driver will be closed and it will return post whatever was found
 
-    def __init__(self, page_name, posts_count=10, browser="chrome", proxy=None, timeout=600, headless=True):
+    def __init__(self, page_name, posts_count=10, browser="chrome", proxy=None, timeout=600, headless=True, browser_profile=None):
         self.page_name = page_name
         self.posts_count = int(posts_count)
         #self.URL = "https://en-gb.facebook.com/pg/{}/posts".format(self.page_name)
@@ -49,11 +52,12 @@ class Facebook_scraper:
         self.__layout = ''
         self.timeout = timeout
         self.headless = headless
+        self.browser_profile = browser_profile
 
     def __start_driver(self):
         """changes the class member __driver value to driver on call"""
         self.__driver = Initializer(
-            self.browser, self.proxy, self.headless).init()
+            self.browser, self.proxy, self.headless, self.browser_profile).init()
 
     def __handle_popup(self, layout):
         # while scrolling, wait for login popup to show, it can be skipped by clicking "Not Now" button
@@ -66,7 +70,7 @@ class Facebook_scraper:
                 Utilities._Utilities__close_modern_layout_signup_modal(
                     self.__driver)
         except Exception as ex:
-            print(ex)
+            logger.exception("Error at handle_popup : {}".format(ex))
 
     def __check_timeout(self, start_time, current_time):
         return (current_time-start_time) > self.timeout
@@ -97,11 +101,11 @@ class Facebook_scraper:
             self.__find_elements(name)
             current_time = time.time()
             if self.__check_timeout(starting_time, current_time) is True:
-                print("Timeout...")
+                logger.setLevel(logging.INFO)
+                logger.info('Timeout...')
                 break
             Utilities._Utilities__scroll_down(
                 self.__driver, self.__layout)  # scroll down
-            # print(len(self.__data_dict))
         # close the browser window after job is done.
         Utilities._Utilities__close_driver(self.__driver)
         # dict trimming, might happen that we find more posts than it was asked, so just trim it
@@ -119,14 +123,14 @@ class Facebook_scraper:
         # open and start writing to CSV files
         mode = 'w'
         if os.path.exists("{}.csv".format(filename)):
-          #if the CSV file already exists then switch to append mode
-          mode = 'a'
+            # if the CSV file already exists then switch to append mode
+            mode = 'a'
         with open("{}.csv".format(filename), mode, newline='', encoding="utf-8") as data_file:
             # instantiate DictWriter for writing CSV file
             writer = csv.DictWriter(data_file, fieldnames=fieldnames)
             if mode == 'w':
-              #if writing mode is
-              writer.writeheader()  # write headers to CSV file
+                # if writing mode is
+                writer.writeheader()  # write headers to CSV file
             # iterate over entire dictionary, write each posts as a row to CSV file
             for key in json_data:
                 # parse post in a dictionary and write it as a single row
@@ -149,7 +153,7 @@ class Facebook_scraper:
             self.__json_to_csv(filename, json.loads(data), directory)
             return True
         except Exception as ex:
-            print(ex)
+            logger.exception('Error at scrap_to_csv : {}'.format(ex))
             return False
 
     def __remove_duplicates(self, all_posts):
@@ -189,7 +193,7 @@ class Facebook_scraper:
                 status, post_url, link_element = Finder._Finder__find_status(
                     post, self.__layout)
                 if post_url is None:
-                  continue
+                    continue
                 # find share from the post
                 shares = Finder._Finder__find_share(post, self.__layout)
                 # converting shares to number
@@ -270,10 +274,9 @@ class Facebook_scraper:
                 posted_time = Finder._Finder__find_posted_time(
                     post, self.__layout, link_element)
 
-                video = Finder._Finder__find_video_url(
-                    post, self.page_name, status)
+                video = Finder._Finder__find_video_url(post)
 
-                image = Finder._Finder__find_image_url(post)
+                image = Finder._Finder__find_image_url(post, self.__layout)
 
                 #post_url = "https://www.facebook.com/{}/posts/{}".format(self.page_name,status)
 
@@ -291,4 +294,5 @@ class Facebook_scraper:
 
                 }
             except Exception as ex:
-                print("error at find_elements method : {}".format(ex))
+                logger.exception(
+                    "Error at find_elements method : {}".format(ex))
