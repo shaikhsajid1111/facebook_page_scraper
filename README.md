@@ -420,7 +420,7 @@ video
  List
 </td>
 <td>
-URL of video present in that post
+URLs of video present in that post
 </td>
 </tr>
 
