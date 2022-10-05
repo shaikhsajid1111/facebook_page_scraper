@@ -182,7 +182,6 @@ class Facebook_scraper:
             self.__driver, self.__layout)  # find all posts
         all_posts = self.__remove_duplicates(
             all_posts)  # remove duplicates from the list
-
         # iterate over all the posts and find details from the same
         for post in all_posts:
             try:
@@ -291,6 +290,5 @@ class Facebook_scraper:
                     "post_url": post_url
 
                 }
-
             except Exception as ex:
                 print("error at find_elements method : {}".format(ex))
