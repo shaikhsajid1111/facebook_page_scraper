@@ -186,7 +186,7 @@ Output:
     "comments": 2,
     "content": "We’ve built data2vec, the first general high-performance self-supervised algorithm for speech, vision, and text. We applied it to different modalities and found it matches or outperforms the best self-supervised algorithms. We hope this brings us closer to a world where computers can learn to solve many different tasks without supervision. Learn more and get the code:  https://ai.facebook.com/…/the-first-high-performance-self-s…",
     "posted_on": "2022-01-20T22:43:35",
-    "video": "",
+    "video": [],
     "image": [
       "https://scontent-bom1-2.xx.fbcdn.net/v/t39.30808-6/s480x480/272147088_2024182621092014_6532581039236849529_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=8024bb&_nc_ohc=j4_1PAndJTIAX82OLNq&_nc_ht=scontent-bom1-2.xx&oh=00_AT9us__TvC9eYBqRyQEwEtYSit9r2UKYg0gFoRK7Efrhyw&oe=61F17B71"
     ],
@@ -216,7 +216,7 @@ Output Structure for JSON format:
         "reaction_count": integer,
         "comments": integer,
         "content": string,
-        "video" : string,
+        "video" : list,
         "image" : list,
         "posted_on": datetime,  //string containing datetime in ISO 8601
         "post_url": string
