@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
-try:
-    from selenium.common.exceptions import NoSuchElementException
-    from .scraping_utilities import Scraping_utilities
-    from .driver_utilities import Utilities
-    import sys
-    import urllib.request
-    import re
-    from dateutil.parser import parse
-    import dateutil
-    import datetime
-    from selenium.webdriver.common.by import By
-except Exception as ex:
-    print(ex)
+from selenium.common.exceptions import NoSuchElementException
+from .scraping_utilities import Scraping_utilities
+from .driver_utilities import Utilities
+import sys
+import urllib.request
+import re
+from dateutil.parser import parse
+import dateutil
+import datetime
+from selenium.webdriver.common.by import By
+import logging
 
+logger = logging.getLogger(__name__)
+format = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+ch = logging.StreamHandler()
+ch.setFormatter(format)
+logger.addHandler(ch)
 
 class Finder():
     """
@@ -33,22 +37,18 @@ class Finder():
                 status = link
                 break
             elif "/photos/" in link_value:
-                # print(link_value)
                 status = link
                 break
             if "fbid=" in link_value:
                 status = link
                 break
             elif "/group/" in link_value:
-                # print(link_value)
                 status = link
                 break
             if "/videos/" in link_value:
-                # print(link_value)
                 status = link
                 break
             elif "/groups/" in link_value:
-                # print(link_value)
                 status = link
                 break
         return status
@@ -79,7 +79,7 @@ class Finder():
             status = "NA"
 
         except Exception as ex:
-            print("error at find_status method : {}".format(ex))
+            logger.exception("Error at find_status method : {}".format(ex))
             status = "NA"
 
         return (status, status_link, link)
@@ -96,7 +96,7 @@ class Finder():
                     shares)
             elif layout == "new":
                 elements = post.find_elements(
-                    By.CSS_SELECTOR, "span.oog5qr5w.tes86rjd.rtxb060y")
+                    By.CSS_SELECTOR, 'div[role="button"] > span')
                 shares = "0"
                 for element in elements:
                     text = element.text
@@ -109,7 +109,7 @@ class Finder():
             shares = 0
 
         except Exception as ex:
-            print("error at find_share method : {}".format(ex))
+            logger.exception("Error at Find Share method : {}".format(ex))
             shares = 0
 
         return shares
@@ -124,7 +124,7 @@ class Finder():
         except NoSuchElementException:
             reactions_all = ""
         except Exception as ex:
-            print("error at find_reactions method : {}".format(ex))
+            logger.exception("Error at find_reactions method : {}".format(ex))
         return reactions_all
 
     @staticmethod
@@ -139,17 +139,19 @@ class Finder():
                 comments = Scraping_utilities._Scraping_utilities__extract_numbers(
                     comments)
             elif layout == "new":
-                elements = post.find_elements(By.CSS_SELECTOR, "div.gtad4xkn")
-                comments = "0"
+                elements = post.find_elements(
+                    By.CSS_SELECTOR, 'div[role="button"] > span')
+                comments = 0
                 for element in elements:
                     text = element.text
                     if "comment" in text:
                         comments = Scraping_utilities._Scraping_utilities__extract_numbers(
-                            comments)
+                            text)
+                        break
         except NoSuchElementException:
             comments = 0
         except Exception as ex:
-            print("error at find_comments method : {}".format(ex))
+            logger.exception("Error at find_comments method : {}".format(ex))
             comments = 0
 
         return comments
@@ -211,15 +213,15 @@ class Finder():
                 post_content = post.find_element(
                     By.CSS_SELECTOR, '[data-ad-preview="message"]')
                 # if "See More" button exists
-                if Finder._Finder__element_exists(post_content, "div.pbevjfx6.innypi6y"):
+                if Finder._Finder__element_exists(post_content, 'div[dir="auto"] > div[role]'):
                     element = post_content.find_element(
-                        By.CSS_SELECTOR, "div.pbevjfx6.innypi6y")  # grab that element
+                        By.CSS_SELECTOR, 'div[dir="auto"] > div[role]')  # grab that element
                     if element.get_attribute("target"):
                         content = Finder._Finder__fetch_post_passage(
                             element.get_attribute("href"))
                     else:
                         Utilities._Utilities__click_see_more(
-                            driver, post_content, 'div.pbevjfx6.innypi6y')
+                            driver, post_content, 'div[dir="auto"] > div[role]')
                         content = post_content.get_attribute(
                             "textContent")  # extract content out of it
                 else:
@@ -230,7 +232,7 @@ class Finder():
             # if [data-testid="post_message"] is not found, it means that post did not had any text,either it is image or video
             content = ""
         except Exception as ex:
-            print("error at find_content method : {}".format(ex))
+            logger.exception("Error at find_content method : {}".format(ex))
             content = ""
         return content
 
@@ -256,43 +258,48 @@ class Finder():
         except TypeError:
             timestamp = ""
         except Exception as ex:
-            print("error at find_posted_time method : {}".format(ex))
+            logger.exception(
+                "Error at find_posted_time method : {}".format(ex))
             timestamp = ""
             return timestamp
 
     @staticmethod
-    def __find_video_url(post, page_name, status):
+    def __find_video_url(post):
         """finds video of the facebook post using selenium's webdriver's method"""
         try:
             # if video is found in the post, than create a video URL by concatenating post's id with page_name
-            video_element = post.find_element(By.TAG_NAME, "video")
-            video = "https://www.facebook.com/{}/videos/{}".format(
-                page_name, status)
-
+            video_element = post.find_elements(By.TAG_NAME, "video")
+            srcs = []
+            for video in video_element:
+              srcs.append(video.get_attribute("src"))
         except NoSuchElementException:
-            video = ""
+            video = []
             pass
         except Exception as ex:
-            video = ""
-            print("error at find_video_url method : {}".format(ex))
+            video = []
+            logger.exception("Error at find_video_url method : {}".format(ex))
 
-        return video
+        return srcs
 
     @staticmethod
-    def __find_image_url(post):
+    def __find_image_url(post, layout):
         """finds all image of the facebook post using selenium's webdriver's method"""
         try:
-            # find all img tag that looks like <img class="scaledImageFitWidth img" src="">
-            images = post.find_elements(
-                By.CSS_SELECTOR, "img.scaledImageFitWidth.img")
-            # extract src attribute from all the img tag,store it in list
+            if layout == "old":
+                # find all img tag that looks like <img class="scaledImageFitWidth img" src=""> div > img[referrerpolicy]
+                images = post.find_elements(
+                    By.CSS_SELECTOR, "img.scaledImageFitWidth.img")
+                # extract src attribute from all the img tag,store it in list
+            elif layout == "new":
+                images = post.find_elements(
+                    By.CSS_SELECTOR, "div > img[referrerpolicy]")
             sources = [image.get_attribute("src") for image in images] if len(
                 images) > 0 else []
         except NoSuchElementException:
             sources = []
             pass
         except Exception as ex:
-            print("error at find_image_url method : {}".format(ex))
+            logger.exception("Error at find_image_url method : {}".format(ex))
             sources = []
 
         return sources
@@ -310,12 +317,13 @@ class Finder():
                     By.CSS_SELECTOR, 'div[role="article"]')
             return all_posts
         except NoSuchElementException:
-            print("Cannot find any posts! Exiting!")
+            logger.error("Cannot find any posts! Exiting!")
             # if this fails to find posts that means, code cannot move forward, as no post is found
             Utilities.__close_driver(driver)
             sys.exit(1)
         except Exception as ex:
-            print("error at __find_all_posts method : {}".format(ex))
+            logger.exception(
+                "Error at find_all_posts method : {}".format(ex))
             Utilities.__close_driver(driver)
             sys.exit(1)
 
@@ -331,7 +339,7 @@ class Finder():
                     By.TAG_NAME, "strong").get_attribute("textContent")
             return name
         except Exception as ex:
-            print("error at __find_name method : {}".format(ex))
+            logger.exception("Error at __find_name method : {}".format(ex))
 
     @staticmethod
     def __detect_ui(driver):
@@ -341,7 +349,7 @@ class Finder():
         except NoSuchElementException:
             return "new"
         except Exception as ex:
-            print("error art __detect_ui: {}".format(ex))
+            logger.exception("Error art __detect_ui: {}".format(ex))
             Utilities.__close_driver(driver)
             sys.exit(1)
 
@@ -356,5 +364,5 @@ class Finder():
                                                    "div")
 
         except Exception as ex:
-            print("find_reaction", ex)
+            logger.exception("Error at find_reaction", ex)
             return ""

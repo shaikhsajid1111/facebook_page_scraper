@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-try:
-    from datetime import datetime as dt
-    import re
-    from datetime import datetime, timedelta
-    from selenium.webdriver.common.by import By
-except Exception as ex:
-    print(ex)
+from datetime import datetime as dt
+import re
+from datetime import datetime, timedelta
+from selenium.webdriver.common.by import By
+import logging
 
+logger = logging.getLogger(__name__)
+format = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+ch = logging.StreamHandler()
+ch.setFormatter(format)
+logger.addHandler(ch)
 
 class Scraping_utilities:
     @staticmethod
@@ -32,7 +36,7 @@ class Scraping_utilities:
         try:
             return dt.utcfromtimestamp(float(unix_timestamp)).isoformat()
         except Exception as ex:
-            print(ex)
+          logger.exception('Error at convert_time : {}'.format(ex))
 
     @staticmethod
     def __extract_content(content):
@@ -77,7 +81,8 @@ class Scraping_utilities:
         except IndexError:
             pass
         except Exception as ex:
-            print(ex)
+            logger.exception(
+                'Error at extract_id_from_link : {}'.format(ex))
 
     @staticmethod
     def __value_to_float(x):

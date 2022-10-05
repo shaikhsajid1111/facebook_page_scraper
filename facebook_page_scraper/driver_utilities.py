@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 
-try:
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-    from selenium.webdriver.common.by import By
-    from selenium.common.exceptions import NoSuchElementException, WebDriverException
-    from random import randint
-    from selenium.webdriver.common.keys import Keys
-    import sys
-except Exception as ex:
-    print(ex)
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from random import randint
+from selenium.webdriver.common.keys import Keys
+import logging
+import sys
 
+logger = logging.getLogger(__name__)
+format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+ch = logging.StreamHandler()
+ch.setFormatter(format)
+logger.addHandler(ch)
 
 class Utilities:
 
@@ -21,7 +24,7 @@ class Utilities:
             driver.close()
             driver.quit()
         except Exception as ex:
-            print("error at close_driver method : {}".format(ex))
+            logger.exception("Error at close_driver method : {}".format(ex))
 
     @staticmethod
     def __close_error_popup(driver):
@@ -42,7 +45,7 @@ class Utilities:
 
         except Exception as ex:
             # if any other error occured except the above one
-            print("error at close_error_popup method : {}".format(ex))
+            logger.exception("Error at close_error_popup method : {}".format(ex))
 
     @staticmethod
     def __scroll_down_half(driver):
@@ -52,7 +55,7 @@ class Utilities:
         except Exception as ex:
             # if any error occured than close the driver and exit
             Utilities.__close_driver(driver)
-            print("error at scroll_down_half method : {}".format(ex))
+            logger.exception("Error at scroll_down_half method : {}".format(ex))
 
     @staticmethod
     def __close_modern_layout_signup_modal(driver):
@@ -65,7 +68,7 @@ class Utilities:
         except NoSuchElementException:
             pass
         except Exception as ex:
-            print("error at close_modern_layout_signup_modal: {}".format(ex))
+            logger.exception("Error at close_modern_layout_signup_modal: {}".format(ex))
 
     @staticmethod
     def __scroll_down(driver, layout):
@@ -85,7 +88,7 @@ class Utilities:
         except Exception as ex:
             # if any error occured than close the driver and exit
             Utilities.__close_driver(driver)
-            print("error at scroll_down method : {}".format(ex))
+            logger.exception("Error at scroll_down method : {}".format(ex))
 
     @staticmethod
     def __close_popup(driver):
@@ -105,7 +108,7 @@ class Utilities:
         except NoSuchElementException:
             pass  # passing this exception silently as modal may not show up
         except Exception as ex:
-            print("error at close_popup method : {}".format(ex))
+            logger.exception("Error at close_popup method : {}".format(ex))
 
     @staticmethod
     def __wait_for_element_to_appear(driver, layout):
@@ -126,12 +129,12 @@ class Utilities:
 
         except WebDriverException:
             # if it was not found,it means either page is not loading or it does not exists
-            print("No posts were found!")
+            logger.critical("No posts were found!")
             Utilities.__close_driver(driver)
             # exit the program, because if posts does not exists,we cannot go further
             sys.exit(1)
         except Exception as ex:
-            print("error at wait_for_element_to_appear method : {}".format(ex))
+            logger.exception("Error at wait_for_element_to_appear method : {}".format(ex))
             Utilities.__close_driver(driver)
 
     @staticmethod
@@ -156,4 +159,4 @@ class Utilities:
         except IndexError:
             pass
         except Exception as ex:
-            print("error at click_see_more method : {}".format(ex))
+            logger.exception("Error at click_see_more method : {}".format(ex))
