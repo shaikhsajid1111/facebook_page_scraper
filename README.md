@@ -5,7 +5,44 @@
 
 <p> No need of API key, No limitation on number of requests. Import the library and <b> Just Do It !<b> </p>
 
-<h2> Prerequisites </h2>
+<!--TABLE of contents-->
+<h2> Table of Contents </h2>
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a>Getting Started</a>
+      <ul>
+        <li><a href="#Prerequisites">Prerequisites</a></li>
+        <li><a href="#Installation">Installation</a>
+        <ul>
+        <li><a href="#sourceInstallation">Installing from source</a></li>
+        <li><a href="#pypiInstallation">Installing with PyPI</a></li>
+        </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#Usage">Usage</a>
+    <ul>
+    <li><a href="#page">How to instantiate?</a>
+    <ul>
+    <li><a href="#parameters">Parameters for <code>Facebook_scraper()</code></a></li>
+    <li><a href="#JSONWay">Scrape in JSON format</a>
+    <ul><li><a href="#jsonOutput">JSON Output Format</a></li></ul>
+    </li>
+    <li><a href="#CSVWay">Scrape in CSV format</a>
+    <ul><li><a href="#csvParameter">Parameters for scrape_to_csv() method</a></li></ul>
+    </li>
+    <li><a href="#outputKeys">Keys of the output data</a></li>
+    </ul>
+    <li><a href="#tech">Tech</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
+
+<!--TABLE of contents //-->
+
+<h2 id="Prerequisites"> Prerequisites </h2>
 
 - Internet Connection
 - Python 3.6+
@@ -13,9 +50,9 @@
 <br>
 
 <hr>
-<h2>Installation:</h2>
+<h2 id="Installation">Installation:</h2>
 
-<h3> Installing from source: </h3>
+<h3 id="sourceInstallation"> Installing from source: </h3>
 
 ```
 git clone https://github.com/shaikhsajid1111/facebook_page_scraper
@@ -27,14 +64,14 @@ git clone https://github.com/shaikhsajid1111/facebook_page_scraper
 python3 setup.py install
 ```
 <br>
-<p>Installing with pypi</p>
+<p id="pypiInstallation">Installing with pypi</p>
 
 ```
 pip3 install facebook-page-scraper
 ```
 <br>
 <hr>
-<h2> How to use? </h2>
+<h2 id="page"> How to use? </h2>
 
 
 
@@ -54,7 +91,7 @@ meta_ai = Facebook_scraper(page_name, posts_count, browser, proxy=proxy, timeout
 
 ```
 
-<h3> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless, browser_profile) </code> class </h3>
+<h3 id="parameters"> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless, browser_profile) </code> class </h3>
 <table>
 <th>
 <tr>
@@ -157,7 +194,7 @@ Path to the browser profile where cookies are stored and can be used for scrapin
 <br
 
 >
-<h3> For post's data in <b>JSON</b> format:</h3>
+<h3 id="JSONWay"> For post's data in <b>JSON</b> format:</h3>
 
 ```python
 #call the scrap_to_json() method
@@ -166,7 +203,9 @@ json_data = meta_ai.scrap_to_json()
 print(json_data)
 
 ```
+
 Output:
+
 ```javascript
 
 {
@@ -194,8 +233,8 @@ Output:
   }, ...
 
 }
-
 ```
+<div id="jsonOutput">
 Output Structure for JSON format:
 
 
@@ -224,12 +263,12 @@ Output Structure for JSON format:
 }
 
 ```
-
+</div>
 <br>
 <hr>
 <br>
 
-<h3> For saving post's data directly to <b>CSV</b> file</h3>
+<h3 id="CSVWay"> For saving post's data directly to <b>CSV</b> file</h3>
 
 ``` python
 #call scrap_to_csv(filename,directory) method
@@ -253,7 +292,7 @@ id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,con
 <hr>
 <br>
 
-<h3> Parameters for  <code> scrap_to_csv(filename, directory) </code> method. </h3>
+<h3 id="csvParameter"> Parameters for  <code> scrap_to_csv(filename, directory) </code> method. </h3>
 
 <table>
 <th>
@@ -300,7 +339,7 @@ Directory where CSV file have to be stored.
 
 
 
-<h3>Keys of the outputs:</h3>
+<h3 id="outputKeys">Keys of the outputs:</h3>
 <table>
 <th>
 <tr>
@@ -466,7 +505,7 @@ URL for that post
 <br>
 
 <hr>
-<h2> Tech </h2>
+<h2 id="tech"> Tech </h2>
 <p>This project uses different libraries to work properly.</p>
 <ul>
 <li> <a href="https://www.selenium.dev/" target='_blank'>Selenium</a></li>
@@ -480,5 +519,5 @@ URL for that post
 If you encounter anything unusual please feel free to create issue <a href='https://github.com/shaikhsajid1111/facebook_page_scraper/issues'>here</a>
 <hr>
 
-<h2> LICENSE </h2>
+<h2 id="license"> LICENSE </h2>
 MIT
