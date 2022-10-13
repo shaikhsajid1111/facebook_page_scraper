@@ -76,6 +76,7 @@ class Facebook_scraper:
         return (current_time-start_time) > self.timeout
 
     def scrap_to_json(self):
+        self.__data_dict = {}  # this dictionary stores all post's data
         # call the __start_driver and override class member __driver to webdriver's instance
         self.__start_driver()
         starting_time = time.time()
