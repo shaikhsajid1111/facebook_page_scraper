@@ -8,12 +8,15 @@ from random import randint
 from selenium.webdriver.common.keys import Keys
 import logging
 import sys
+import time
 
 logger = logging.getLogger(__name__)
-format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+format = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch = logging.StreamHandler()
 ch.setFormatter(format)
 logger.addHandler(ch)
+
 
 class Utilities:
 
@@ -45,7 +48,8 @@ class Utilities:
 
         except Exception as ex:
             # if any other error occured except the above one
-            logger.exception("Error at close_error_popup method : {}".format(ex))
+            logger.exception(
+                "Error at close_error_popup method : {}".format(ex))
 
     @staticmethod
     def __scroll_down_half(driver):
@@ -55,7 +59,8 @@ class Utilities:
         except Exception as ex:
             # if any error occured than close the driver and exit
             Utilities.__close_driver(driver)
-            logger.exception("Error at scroll_down_half method : {}".format(ex))
+            logger.exception(
+                "Error at scroll_down_half method : {}".format(ex))
 
     @staticmethod
     def __close_modern_layout_signup_modal(driver):
@@ -68,7 +73,8 @@ class Utilities:
         except NoSuchElementException:
             pass
         except Exception as ex:
-            logger.exception("Error at close_modern_layout_signup_modal: {}".format(ex))
+            logger.exception(
+                "Error at close_modern_layout_signup_modal: {}".format(ex))
 
     @staticmethod
     def __scroll_down(driver, layout):
@@ -79,8 +85,9 @@ class Utilities:
                     "window.scrollTo(0, document.body.scrollHeight);")
             elif layout == "new":
                 body = driver.find_element(By.CSS_SELECTOR, "body")
-                for _ in range(randint(5, 6)):
+                for _ in range(randint(1, 3)):
                     body.send_keys(Keys.PAGE_UP)
+                time.sleep(randint(5, 6))
                 for _ in range(randint(5, 8)):
                     body.send_keys(Keys.PAGE_DOWN)
                 #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -134,7 +141,8 @@ class Utilities:
             # exit the program, because if posts does not exists,we cannot go further
             sys.exit(1)
         except Exception as ex:
-            logger.exception("Error at wait_for_element_to_appear method : {}".format(ex))
+            logger.exception(
+                "Error at wait_for_element_to_appear method : {}".format(ex))
             Utilities.__close_driver(driver)
 
     @staticmethod
