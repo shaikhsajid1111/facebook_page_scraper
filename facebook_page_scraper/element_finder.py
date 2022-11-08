@@ -364,5 +364,16 @@ class Finder():
                                                    "div")
 
         except Exception as ex:
-            logger.exception("Error at find_reaction", ex)
+            logger.exception("Error at find_reaction : {}".format(ex))
             return ""
+
+    @staticmethod
+    def __accept_cookies(driver):
+      try:
+        button = driver.find_elements(By.CSS_SELECTOR, '[aria-label="Allow essential and optional cookies"]')
+        button[-1].click()
+      except NoSuchElementException:
+        pass
+      except Exception as ex:
+        logger.exception('Error at accept_cookies: {}'.format(ex))
+        sys.exit(1)
