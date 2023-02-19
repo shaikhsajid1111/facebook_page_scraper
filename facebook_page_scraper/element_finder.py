@@ -100,15 +100,13 @@ class Finder:
                 ).get_attribute("textContent")
                 shares = Scraping_utilities._Scraping_utilities__extract_numbers(shares)
             elif layout == "new":
-                elements = post.find_elements(
-                    By.CSS_SELECTOR, 'div[role="button"] > span'
+                element = post.find_element(
+                    By.CSS_SELECTOR, 'div:nth-child(2) > span > div > div > div:nth-child(1) > span'
                 )
                 shares = "0"
-                for element in elements:
-                    text = element.text
-                    if "share" in text:
-                        shares = re.findall("\d+", text)[0]
-                        break
+                if not element:
+                  return shares
+                return element.text
             return shares
         except NoSuchElementException:
             # if element is not present that means there wasn't any shares
@@ -148,19 +146,13 @@ class Finder:
                     comments
                 )
             elif layout == "new":
-                elements = post.find_elements(
-                    By.CSS_SELECTOR, 'div[role="button"] > span'
+                element = post.find_element(
+                    By.CSS_SELECTOR, 'div:nth-child(1) > span > div > div > div:nth-child(1) > span'
                 )
                 comments = 0
-                for element in elements:
-                    text = element.text
-                    if "comment" in text:
-                        comments = (
-                            Scraping_utilities._Scraping_utilities__extract_numbers(
-                                text
-                            )
-                        )
-                        break
+                if element is None:
+                    return comments
+                return element.text
         except NoSuchElementException:
             comments = 0
         except Exception as ex:
