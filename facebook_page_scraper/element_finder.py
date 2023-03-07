@@ -124,7 +124,7 @@ class Finder:
         try:
             # find element that have attribute aria-label as 'See who reacted to this
             reactions_all = post.find_element(
-                By.CSS_SELECTOR, '[aria-label="See who reacted to this"]'
+                By.CSS_SELECTOR, '[aria-label="Zie wie hierop heeft gereageerd"]'
             )
         except NoSuchElementException:
             reactions_all = ""

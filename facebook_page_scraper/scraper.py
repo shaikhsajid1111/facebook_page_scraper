@@ -217,28 +217,28 @@ class Facebook_scraper:
                 # if Like aria-label is in the list, than extract it and extract numbers from that text
 
                 likes = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
-                    l, "Like")
+                    l, "Leuk")
 
                 # if Love aria-label is in the list, than extract it and extract numbers from that text
                 loves = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
-                    l, "Love")
+                    l, "Geweldig")
 
                 # if Wow aria-label is in the list, than extract it and extract numbers from that text
                 wow = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
-                    l, "Wow")
+                    l, "Verbluft")
 
                 # if Care aria-label is in the list, than extract it and extract numbers from that text
                 cares = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
-                    l, "Care")
+                    l, "Medeleven")
                 # if Sad aria-label is in the list, than extract it and extract numbers from that text
                 sad = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
-                    l, "Sad")
+                    l, "Verdrietig")
                 # if Angry aria-label is in the list, than extract it and extract numbers from that text
                 angry = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
-                    l, "Angry")
+                    l, "Boos")
                 # if Haha aria-label is in the list, than extract it and extract numbers from that text
                 haha = Scraping_utilities._Scraping_utilities__find_reaction_by_text(
-                    l, "Haha")
+                    l, "Grappig")
 
                 # converting all reactions to numbers
                 # e,g reactions may contain counts like "5k","5m", so converting them to actual number
