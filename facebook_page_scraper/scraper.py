@@ -17,7 +17,6 @@ ch.setFormatter(format)
 logger.addHandler(ch)
 
 class Facebook_scraper:
-    __data_dict = {}  # this dictionary stores all post's data
 
     # when we scroll and extract all posts,it may happens that we extract same posts over and over,so this lead to too much iteration
     # and waste time to iterate over and over the same post, to solve that,
@@ -26,9 +25,6 @@ class Facebook_scraper:
     # 2) provides search of element,
     # 3) compatible with list's unpacking to quickly add element inside itself from list
     #  set() seems to be doing the work properly
-
-    # __extracted_post contains all the post's ID that have been scraped before and as it set() it avoids post's ID duplication.
-    __extracted_post = set()
 
     # condition,
     # 1) if we reach bottom of the page and post is not longer available, and we don't meet the number of posts that we need to find
@@ -41,7 +37,7 @@ class Facebook_scraper:
     # on each iteration __close_after_retry is called to check if retry have turned to 0
     # if it returns true,it will break the loop. After coming out of loop,driver will be closed and it will return post whatever was found
 
-    def __init__(self, page_name, posts_count=10, browser="chrome", proxy=None, timeout=600, headless=True, browser_profile=None):
+    def __init__(self, page_name, posts_count=10, browser="chrome", proxy=None, timeout=600, headless=True):
         self.page_name = page_name
         self.posts_count = int(posts_count)
         #self.URL = "https://en-gb.facebook.com/pg/{}/posts".format(self.page_name)
@@ -52,12 +48,14 @@ class Facebook_scraper:
         self.__layout = ''
         self.timeout = timeout
         self.headless = headless
-        self.browser_profile = browser_profile
+        self.__data_dict = {}  # this dictionary stores all post's data
+        # __extracted_post contains all the post's ID that have been scraped before and as it set() it avoids post's ID duplication.
+        self.__extracted_post = set()
 
     def __start_driver(self):
         """changes the class member __driver value to driver on call"""
         self.__driver = Initializer(
-            self.browser, self.proxy, self.headless, self.browser_profile).init()
+            self.browser, self.proxy, self.headless).init()
 
     def __handle_popup(self, layout):
         # while scrolling, wait for login popup to show, it can be skipped by clicking "Not Now" button
@@ -69,6 +67,9 @@ class Facebook_scraper:
             elif layout == "new":
                 Utilities._Utilities__close_modern_layout_signup_modal(
                     self.__driver)
+                Utilities._Utilities__close_cookie_consent_modern_layout(
+                    self.__driver)
+
         except Exception as ex:
             logger.exception("Error at handle_popup : {}".format(ex))
 

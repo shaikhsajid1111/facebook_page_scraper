@@ -168,3 +168,14 @@ class Utilities:
             pass
         except Exception as ex:
             logger.exception("Error at click_see_more method : {}".format(ex))
+
+    @staticmethod
+    def __close_cookie_consent_modern_layout(driver):
+        # To avoid the cookie consent prompt
+        try:
+          allow_span = driver.find_element(
+             By.XPATH, '//div[contains(@aria-label, "Allow")]/../following-sibling::div')
+          allow_span.click()
+        except Exception as ex:
+            #if not found, that's fine silently just log thing do not stop
+            logger.info('The Cookie Consent Prompt was not found!: ', ex)
