@@ -92,7 +92,7 @@ meta_ai = Facebook_scraper(page_name, posts_count, browser, proxy=proxy, timeout
 
 ```
 
-<h3 id="scraperParameters"> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless, browser_profile) </code> class </h3>
+<h3 id="scraperParameters"> Parameters for  <code>Facebook_scraper(page_name, posts_count, browser, proxy, timeout, headless) </code> class </h3>
 <table>
 <th>
 <tr>
@@ -174,17 +174,6 @@ Whether to run browser in headless mode?. Default is True
 </td>
 </tr>
 
-<tr>
-<td>
-browser_profile
-</td>
-<td>
-String
-</td>
-<td>
-Path to the browser profile where cookies are stored and can be used for scraping data in an authenticated way.
-</td>
-</tr>
 
 </table>
 <br>

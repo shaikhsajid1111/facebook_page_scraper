@@ -19,27 +19,16 @@ logger.addHandler(ch)
 
 class Initializer:
 
-    def __init__(self, browser_name, proxy=None, headless=True, profile=None):
+    def __init__(self, browser_name, proxy=None, headless=True):
         self.browser_name = browser_name
         self.proxy = proxy
         self.headless = headless
-        self.profile = profile
 
     def set_properties(self, browser_option):
         """adds capabilities to the driver"""
         if self.headless:
             browser_option.add_argument(
                 '--headless')  # runs browser in headless mode
-        if self.profile and self.browser_name.lower() == "chrome":
-            logger.setLevel(logging.INFO)
-            logger.info("Loading Profile from {}".format(self.profile))
-            browser_option.add_argument(
-                "user-data-dir={}".format(self.profile))
-        if self.profile and self.browser_name.lower() == "firefox":
-            logger.setLevel(logging.INFO)
-            logger.info("Loading Profile from {}".format(self.profile))
-            browser_option.add_argument("-profile")
-            browser_option.add_argument(self.profile)
         browser_option.add_argument('--no-sandbox')
         browser_option.add_argument("--disable-dev-shm-usage")
         browser_option.add_argument('--ignore-certificate-errors')
