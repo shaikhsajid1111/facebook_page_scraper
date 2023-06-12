@@ -5,7 +5,7 @@ with open("README.md", "r") as file:
 
 requirements = ['selenium==4.1.0',
                 'webdriver-manager==3.2.2',
-                'selenium-wire==4.3.1',
+                'selenium-wire==5.1.0',
                 'python-dateutil==2.8.2']
 
 
@@ -41,6 +41,6 @@ setuptools.setup(
         "Topic :: Internet :: WWW/HTTP"
 
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=requirements
 )
