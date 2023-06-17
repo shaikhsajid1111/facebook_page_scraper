@@ -107,9 +107,13 @@ class Scraping_utilities:
     @staticmethod
     def __find_reaction_by_text(l, string):
         reaction = [substring for substring in l if string in substring]
+        if len(reaction) == 0:
+            return '0'
         reaction = re.findall(
-            "\d+", reaction[0])[0] if len(reaction) > 0 else "0"
-        return reaction
+            r"(\d+(?:\.\d+)?)([MmBbKk])?", reaction[0])
+        if len(reaction) > 0:
+            return ''.join(reaction[0]) #list of tuple, return first tuple's first result
+        return '0'
 
     @staticmethod
     def __convert_to_iso(t):
