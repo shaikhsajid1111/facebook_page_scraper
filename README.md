@@ -46,7 +46,7 @@
 <h2 id="Prerequisites"> Prerequisites </h2>
 
 - Internet Connection
-- Python 3.6+
+- Python 3.7+
 - Chrome or Firefox browser installed on your machine
 <br>
 
