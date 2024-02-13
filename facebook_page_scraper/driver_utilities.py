@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
-from random import randint
-from selenium.webdriver.common.keys import Keys
 import logging
 import sys
 import time
+from random import randint
+
+from selenium.common.exceptions import (NoSuchElementException,
+                                        WebDriverException)
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 logger = logging.getLogger(__name__)
 format = logging.Formatter(
@@ -118,7 +120,7 @@ class Utilities:
             logger.exception("Error at close_popup method : {}".format(ex))
 
     @staticmethod
-    def __wait_for_element_to_appear(driver, layout):
+    def __wait_for_element_to_appear(driver, layout, timeout):
         """expects driver's instance, wait for posts to show.
         post's CSS class name is userContentWrapper
         """
@@ -131,7 +133,7 @@ class Utilities:
                 WebDriverWait(driver, 30).until(EC.presence_of_element_located(
                     (By.CSS_SELECTOR, '.userContentWrapper')))
             elif layout == "new":
-                WebDriverWait(driver, 30).until(
+                WebDriverWait(driver, 60).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "[aria-posinset]")))
 
         except WebDriverException:

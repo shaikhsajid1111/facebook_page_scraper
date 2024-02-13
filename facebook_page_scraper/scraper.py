@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
+import csv
+import json
+import logging
+import os
+import time
+
 from .driver_initialization import Initializer
 from .driver_utilities import Utilities
 from .element_finder import Finder
 from .scraping_utilities import Scraping_utilities
-import json
-import csv
-import os
-import time
-import logging
 
 logger = logging.getLogger(__name__)
 format = logging.Formatter(
@@ -37,7 +38,7 @@ class Facebook_scraper:
     # on each iteration __close_after_retry is called to check if retry have turned to 0
     # if it returns true,it will break the loop. After coming out of loop,driver will be closed and it will return post whatever was found
 
-    def __init__(self, page_name, posts_count=10, browser="chrome", proxy=None, timeout=600, headless=True):
+    def __init__(self, page_name, posts_count=10, browser="chrome", proxy=None, timeout=600, headless=True, isGroup=False):
         self.page_name = page_name
         self.posts_count = int(posts_count)
         #self.URL = "https://en-gb.facebook.com/pg/{}/posts".format(self.page_name)
@@ -48,6 +49,7 @@ class Facebook_scraper:
         self.__layout = ''
         self.timeout = timeout
         self.headless = headless
+        self.isGroup = isGroup
         self.__data_dict = {}  # this dictionary stores all post's data
         # __extracted_post contains all the post's ID that have been scraped before and as it set() it avoids post's ID duplication.
         self.__extracted_post = set()
@@ -89,17 +91,15 @@ class Facebook_scraper:
         Utilities._Utilities__close_error_popup(self.__driver)
         # wait for post to load
         Utilities._Utilities__wait_for_element_to_appear(
-            self.__driver, self.__layout)
+            self.__driver, self.__layout, self.timeout)
         # scroll down to bottom most
         Utilities._Utilities__scroll_down(self.__driver, self.__layout)
         self.__handle_popup(self.__layout)
 
-        name = Finder._Finder__find_name(
-            self.__driver, self.__layout)  # find name element
-
         while len(self.__data_dict) <= self.posts_count:
             self.__handle_popup(self.__layout)
-            self.__find_elements(name)
+            # self.__find_elements(name)
+            self.__find_elements()
             current_time = time.time()
             if self.__check_timeout(starting_time, current_time) is True:
                 logger.setLevel(logging.INFO)
@@ -147,7 +147,7 @@ class Facebook_scraper:
 
             data_file.close()  # after writing close the file
 
-    def scrap_to_csv(self, filename, directory=os.getcwd()):
+    def scrap_to_csv(self, filename, directory=os.getcwd(),):
         try:
             data = self.scrap_to_json()  # get the data in JSON format from the same class method
             # convert it and write to CSV
@@ -181,7 +181,7 @@ class Facebook_scraper:
             # if length of posts is 0,decrement retry by 1
             self.retry -= 1
 
-    def __find_elements(self, name):
+    def __find_elements(self):
         """find elements of posts and add them to data_dict"""
         all_posts = Finder._Finder__find_all_posts(
             self.__driver, self.__layout)  # find all posts
@@ -195,6 +195,13 @@ class Facebook_scraper:
                     post, self.__layout)
                 if post_url is None:
                     continue
+                # TODO add a switch to change name grabbing approach depending on if
+                #       this is a group or page
+                # name = Finder._Finder__find_name(
+                #     self.__driver, self.__layout)  # find name element for page or for each post if this is used for group pages
+                name = Finder._Finder__find_name(
+                    post if self.isGroup else self.__driver, self.__layout)  # find name element for page or for each post if this is used for group pages
+
                 # find share from the post
                 shares = Finder._Finder__find_share(post, self.__layout)
                 # converting shares to number

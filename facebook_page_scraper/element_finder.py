@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-from selenium.common.exceptions import NoSuchElementException
-from .scraping_utilities import Scraping_utilities
-from .driver_utilities import Utilities
+import datetime
+import logging
+import re
 import sys
 import urllib.request
-import re
-from dateutil.parser import parse
+
 import dateutil
-import datetime
+from dateutil.parser import parse
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-import logging
+
+from .driver_utilities import Utilities
+from .scraping_utilities import Scraping_utilities
 
 logger = logging.getLogger(__name__)
 format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -358,17 +360,18 @@ class Finder:
             sys.exit(1)
 
     @staticmethod
-    def __find_name(driver, layout):
-        """finds name of the facebook page using selenium's webdriver's method"""
+    def __find_name(driverOrPost, layout):
+        """finds name of the facebook page or post using selenium's webdriver's method"""
         try:
             if layout == "old":
-                name = driver.find_element(By.CSS_SELECTOR, "a._64-f").get_attribute(
+                name = driverOrPost.find_element(By.CSS_SELECTOR, "a._64-f").get_attribute(
                     "textContent"
-                )
+            )
             elif layout == "new":
-                name = driver.find_element(By.TAG_NAME, "strong").get_attribute(
+                name = driverOrPost.find_element(By.TAG_NAME, "strong").get_attribute(
                     "textContent"
                 )
+                
             return name
         except Exception as ex:
             logger.exception("Error at __find_name method : {}".format(ex))
