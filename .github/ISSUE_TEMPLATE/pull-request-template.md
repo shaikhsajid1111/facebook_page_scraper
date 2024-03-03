@@ -14,4 +14,4 @@ assignees: ''
 ## Checklist before requesting a review
 - [ ] I have performed a self-review of my code
 - [ ] I have tested the code.
-- [ ] What does this change introduce?
+- [ ] I have tested the code does not affect other features.
