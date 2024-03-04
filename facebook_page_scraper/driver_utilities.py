@@ -130,22 +130,28 @@ class Utilities:
                 body = driver.find_element(By.CSS_SELECTOR, "body")
                 for _ in range(randint(3, 5)):
                     body.send_keys(Keys.PAGE_DOWN)
-                WebDriverWait(driver, 30).until(EC.presence_of_element_located(
+                WebDriverWait(driver, timeout).until(EC.presence_of_element_located(
                     (By.CSS_SELECTOR, '.userContentWrapper')))
+                return True
             elif layout == "new":
-                WebDriverWait(driver, 60).until(
+                WebDriverWait(driver, timeout).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "[aria-posinset]")))
+                print("new layout loaded")
+
+                return True
 
         except WebDriverException:
             # if it was not found,it means either page is not loading or it does not exists
             logger.critical("No posts were found!")
-            Utilities.__close_driver(driver)
+            return False
+            # Utilities.__close_driver(driver)
             # exit the program, because if posts does not exists,we cannot go further
-            sys.exit(1)
+            # sys.exit(1)
         except Exception as ex:
             logger.exception(
                 "Error at wait_for_element_to_appear method : {}".format(ex))
-            Utilities.__close_driver(driver)
+            return False
+            # Utilities.__close_driver(driver)
 
     @staticmethod
     def __click_see_more(driver, content, selector=None):
