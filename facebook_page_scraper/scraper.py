@@ -193,11 +193,11 @@ class Facebook_scraper:
         """find elements of posts and add them to data_dict"""
         all_posts = Finder._Finder__find_all_posts(
             self.__driver, self.__layout)  # find all posts
-        print("len1: " + str(len(all_posts)))
-        # logger.info("len: " + str(len(all_posts)))
+        print("all_posts length: " + str(len(all_posts)))
+
+         # remove duplicates from the list
         all_posts = self.__remove_duplicates(
-            all_posts)  # remove duplicates from the list
-        # print("len2: " + str(len(all_posts)))
+            all_posts) 
 
         # iterate over all the posts and find details from the same
         for post in all_posts:
@@ -205,29 +205,23 @@ class Facebook_scraper:
                 # find post ID from post
                 status, post_url, link_element = Finder._Finder__find_status(
                     post, self.__layout)
-                                # Assuming 'link' is your WebElement
-                # outer_html = link_element.get_attribute("outerHTML")
-
-                # Extracting just the opening tag
-                # opening_tag = outer_html.split('>', 1)[0] + '>'
-
-                # print("OPENING LINK+ELEMENT:\n" + opening_tag[:150])
                 if post_url is None:
                     print("no post_url, skipping")
                     continue
 
-                                # Split the URL on the '?' character
+                # Split the URL on the '?' character, to detach the referer or uneeded query info
                 parts = post_url.split('?')
-
                 # The first part of the list is the URL up to the '?'
                 post_url = parts[0]
-                # TODO add a switch to change name grabbing approach depending on if
-                #       this is a group or page
+
+
+                # finds name depending on if this facebook site is a page or group (we pass a post obj or a webDriver)
                 name = Finder._Finder__find_name(
                     post if self.isGroup else self.__driver, self.__layout)  # find name element for page or for each post if this is used for group pages
 
+                # NOTE below is optional additional fields to scrape, all of which should function except timestamp. Comments may act funky too
                 # find share from the post
-                shares = Finder._Finder__find_share(post, self.__layout)
+                # shares = Finder._Finder__find_share(post, self.__layout)
                 # converting shares to number
                 # e.g if 5k than it should be 5000
                 # shares = int(
@@ -325,10 +319,6 @@ class Facebook_scraper:
                     "post_url": post_url
 
                 }
-
-                # json_formatted_str = json.dumps(self.__data_dict[status], indent=2)
-
-                # print("status: " + str(status) + " \ndict: " + json_formatted_str)  
             except Exception as ex:
                 logger.exception(
                     "Error at find_elements method : {}".format(ex))

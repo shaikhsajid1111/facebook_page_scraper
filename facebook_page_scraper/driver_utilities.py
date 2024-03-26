@@ -144,8 +144,8 @@ class Utilities:
             # if it was not found,it means either page is not loading or it does not exists
             logger.critical("No posts were found!")
             return False
+            # (optional) exit the program, because if posts does not exists,we cannot go further
             # Utilities.__close_driver(driver)
-            # exit the program, because if posts does not exists,we cannot go further
             # sys.exit(1)
         except Exception as ex:
             logger.exception(

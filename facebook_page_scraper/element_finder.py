@@ -84,31 +84,12 @@ class Finder:
                     By.CSS_SELECTOR, 'span > a[role="link"]'
                 )
                 if link is not None:
-                    # Assuming 'link' is your WebElement
-                    outer_html = link.get_attribute("outerHTML")
-
-                    # Extracting just the opening tag
-                    opening_tag = outer_html.split('>', 1)[0] + '>'
-
-                    # print("OPENING TAG:\n" + opening_tag[:500])
-
                     status_link = link.get_attribute("href")
                     status = Scraping_utilities._Scraping_utilities__extract_id_from_link(
                         status_link
                     )
-                    # print("linkkk: " + str(link))
-                    # print("statusss: " + str(status_link))
-                else:
-                    print("no sneaky link")
 
                 links = post.find_elements(By.TAG_NAME, 'a')
-                # Assuming 'link' is your WebElement
-                # outer_html = links.get_attribute("outerHTML")
-
-                # # Extracting just the opening tag
-                # opening_tag = outer_html.split('>', 1)[0] + '>'
-
-                # print("ALL LINKS TAG:\n" + opening_tag[:150])
                 if links:
                     # Initialize variables to store the matching link element and URL
                     matching_link_element = None
@@ -124,25 +105,9 @@ class Finder:
 
                     # Check if a matching link was found
                     if post_url and matching_link_element:
-                        # status_link = post_url
-                        # print("\nURL:", post_url)
-                        # Assuming 'link' is your WebElement
-                        outer_html2 = matching_link_element.get_attribute("outerHTML")
-
-                        # # Extracting just the opening tag
-                        opening_tag = outer_html.split('>', 1)[0] + '>'
-                        # areEqual = outer_html == outer_html2
-                        # print("ARE EQUAL: " + str(areEqual))
-                        # print("OPENING match:\n" + opening_tag[:1000])
                         status = Scraping_utilities._Scraping_utilities__extract_id_from_link(post_url)
                         # Now you have the URL, the status, and the matching link element itself
-                        # print("\nURL:", post_url)
                         return (status, post_url, matching_link_element)
-
-                #     else:
-                #         print("no post url or link element")
-                # else:
-                #     print("no links")
 
         except NoSuchElementException:
             # if element is not found
@@ -325,7 +290,6 @@ class Finder:
     @staticmethod
     def __find_posted_time(post, layout, link_element, driver):
         """finds posted time of the facebook post using selenium's webdriver's method"""
-        # print("POST ELEMENT:\n " + post.get_attribute("outerHTML"))
         try:
             # extract element that looks like <abbr class='_5ptz' data-utime="some unix timestamp"> </abbr>
             # posted_time = post.find_element_by_css_selector("abbr._5ptz").get_attribute("data-utime")
@@ -335,16 +299,9 @@ class Finder:
                 )
                 return datetime.datetime.fromtimestamp(float(posted_time)).isoformat()
             elif layout == "new":
-                # There is no aria_label on these link elements anymore
-                # aria_label_value = link_element.get_attribute("aria-label")
-                # timestamp = (
-                #     parse(aria_label_value).isoformat()
-                #     if len(aria_label_value) > 5
-                #     else Scraping_utilities._Scraping_utilities__convert_to_iso(
-                #         aria_label_value
-                #     )
-                # )
-
+                # NOTE There is no aria_label on these link elements anymore
+                # Facebook uses a shadowDOM element to hide timestamp, which is tricky to extract
+                # An unsuccesful attempt to extract time from nested shadowDOMs is below
 
                 js_script = """
                     // Starting from the provided element, find the SVG using querySelector
@@ -374,12 +331,6 @@ class Finder:
 
                 return timestamp
 
-
-        # except dateutil.parser._parser.ParserError:
-        #     timestamp = Scraping_utilities._Scraping_utilities__convert_to_iso(
-        #         aria_label_value
-        #     )
-        #     return timestamp
         except TypeError:
             timestamp = ""
         except Exception as ex:
@@ -461,7 +412,6 @@ class Finder:
     def __find_name(driverOrPost, layout):
         """finds name of the facebook page or post using selenium's webdriver's method"""
         # Attempt to print the outer HTML of the driverOrPost for debugging
-        # print("NAME ELEMENT: " + driverOrPost.get_attribute("outerHTML"))
         
         try:
             if layout == "old":
