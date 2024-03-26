@@ -48,7 +48,7 @@
 - Internet Connection
 - Python 3.7+
 - Chrome or Firefox browser installed on your machine
-<br>
+  <br>
 
 <hr>
 <h2 id="Installation">Installation:</h2>
@@ -64,17 +64,17 @@ git clone https://github.com/shaikhsajid1111/facebook_page_scraper
 ```
 python3 setup.py install
 ```
+
 <br>
 <p id="pypiInstallation">Installing with pypi</p>
 
 ```
 pip3 install facebook-page-scraper
 ```
+
 <br>
 <hr>
 <h2 id="instantiation"> How to use? </h2>
-
-
 
 ```python
 #import Facebook_scraper class from facebook_page_scraper
@@ -82,13 +82,18 @@ from facebook_page_scraper import Facebook_scraper
 
 #instantiate the Facebook_scraper class
 
-page_name = "metaai"
+page_or_group_name = "Meta"
 posts_count = 10
 browser = "firefox"
 proxy = "IP:PORT" #if proxy requires authentication then user:password@IP:PORT
 timeout = 600 #600 seconds
 headless = True
-meta_ai = Facebook_scraper(page_name, posts_count, browser, proxy=proxy, timeout=timeout, headless=headless)
+# get env password
+fb_password = os.getenv('fb_password')
+fb_email = os.getenv('fb_email')
+# indicates if the Facebook target is a FB group or FB page
+isGroup= False
+meta_ai = Facebook_scraper(page_or_group_name, posts_count, browser, proxy=proxy, timeout=timeout, headless=headless, isGroup=isGroup)
 
 ```
 
@@ -104,13 +109,13 @@ meta_ai = Facebook_scraper(page_name, posts_count, browser, proxy=proxy, timeout
 
 <tr>
 <td>
-page_name
+page_or_group_name
 </td>
 <td>
 String
 </td>
 <td>
-Name of the facebook page
+Name of the facebook page or group
 </td>
 </tr>
 
@@ -173,7 +178,45 @@ Whether to run browser in headless mode?. Default is True
  </code>
 </td>
 </tr>
+<tr>
 
+<td>
+isGroup
+</td>
+<td>
+Boolean
+</td>
+<td>
+Whether the Facebook target is a group or page. Default is False
+ </code>
+</td>
+</tr>
+
+<tr>
+<td>
+username
+</td>
+<td>
+String
+</td>
+<td>
+username to log into Facebook when scraping (recommended to use .env)
+ </code>
+</td>
+</tr>
+
+<tr>
+<td>
+password
+</td>
+<td>
+String
+</td>
+<td>
+password to log into Facebook when scraping (recommended to use .env)
+ </code>
+</td>
+</tr>
 
 </table>
 <br>
@@ -184,6 +227,7 @@ Whether to run browser in headless mode?. Default is True
 <br
 
 >
+
 <h3 id="JSONWay"> For post's data in <b>JSON</b> format:</h3>
 
 ```python
@@ -224,11 +268,11 @@ Output:
 
 }
 ```
+
 <div id="jsonOutput">
 Output Structure for JSON format:
 
-
-``` javascript
+```javascript
 {
     "id": {
         "name": string,
@@ -253,6 +297,7 @@ Output Structure for JSON format:
 }
 
 ```
+
 </div>
 <br>
 <hr>
@@ -260,7 +305,7 @@ Output Structure for JSON format:
 
 <h3 id="CSVWay"> For saving post's data directly to <b>CSV</b> file</h3>
 
-``` python
+```python
 #call scrap_to_csv(filename,directory) method
 
 
@@ -270,7 +315,8 @@ meta_ai.scrap_to_csv(filename, directory)
 
 ```
 
-content of ```data_file.csv```:
+content of `data_file.csv`:
+
 ```csv
 id,name,shares,likes,loves,wow,cares,sad,angry,haha,reactions_count,comments,content,posted_on,video,image,post_url
 2024182624425347,Meta AI,0,154,19,0,0,0,0,0,173,2,"We’ve built data2vec, the first general high-performance self-supervised algorithm for speech, vision, and text. We applied it to different modalities and found it matches or outperforms the best self-supervised algorithms. We hope this brings us closer to a world where computers can learn to solve many different tasks without supervision. Learn more and get the code:  https://ai.facebook.com/…/the-first-high-performance-self-s…",2022-01-20T22:43:35,,https://scontent-bom1-2.xx.fbcdn.net/v/t39.30808-6/s480x480/272147088_2024182621092014_6532581039236849529_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=8024bb&_nc_ohc=j4_1PAndJTIAX82OLNq&_nc_ht=scontent-bom1-2.xx&oh=00_AT9us__TvC9eYBqRyQEwEtYSit9r2UKYg0gFoRK7Efrhyw&oe=61F17B71,https://www.facebook.com/MetaAI/photos/a.360372474139712/2024182624425347/?type=3&__xts__%5B0%5D=68.ARAse4eiZmZQDOZumNZEDR0tQkE5B6g50K6S66JJPccb-KaWJWg6Yz4v19BQFSZRMd04MeBmV24VqvqMB3oyjAwMDJUtpmgkMiITtSP8HOgy8QEx_vFlq1j-UEImZkzeEgSAJYINndnR5aSQn0GUwL54L3x2BsxEqL1lElL7SnHfTVvIFUDyNfAqUWIsXrkI8X5KjoDchUj7aHRga1HB5EE0x60dZcHogUMb1sJDRmKCcx8xisRgk5XzdZKCQDDdEkUqN-Ch9_NYTMtxlchz1KfR0w9wRt8y9l7E7BNhfLrmm4qyxo-ZpA&__tn__=-R
@@ -327,8 +373,6 @@ Directory where CSV file have to be stored.
 <hr>
 <br>
 
-
-
 <h3 id="outputKeys">Keys of the outputs:</h3>
 <table>
 <th>
@@ -337,8 +381,6 @@ Directory where CSV file have to be stored.
 <td>
 Key
 </td>
-
-
 
 <td>
 Type
@@ -350,7 +392,6 @@ Description
 
 <tr>
 </th>
-
 
 <td>
 <tr>
@@ -416,7 +457,6 @@ Total reaction count of post
 </td>
 </tr>
 
-
 <tr>
 <td>
 comments
@@ -453,10 +493,9 @@ URLs of video present in that post
 </td>
 </tr>
 
-
 <tr>
 <td>
-image
+images
 </td>
 <td>
  List
@@ -489,7 +528,6 @@ String
 URL for that post
 </td>
 </tr>
-
 
 </table>
 <br>

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-from datetime import datetime as dt
-import re
-from datetime import datetime, timedelta
-from selenium.webdriver.common.by import By
 import logging
+import re
+from datetime import datetime
+from datetime import datetime as dt
+from datetime import timedelta
+
+from selenium.webdriver.common.by import By
 
 logger = logging.getLogger(__name__)
 format = logging.Formatter(
