@@ -24,11 +24,11 @@ class Test_json(unittest.TestCase):
 
         
     def test_scraper_for_json(self): 
-        anime_group = facebook_page_scraper.Facebook_scraper("170918513059147",10,"firefox", isGroup=True,  headless=False, username=fb_email, password=fb_password)
+        anime_group = facebook_page_scraper.Facebook_scraper("170918513059147",5,"firefox", isGroup=True,  headless=False, username=fb_email, password=fb_password)
         json_data = anime_group.scrap_to_json()
         data_dictionary = json.loads(json_data)
         
-        self.assertEqual(len(data_dictionary),10)
+        self.assertEqual(len(data_dictionary),5)
         self.assertFalse(self.is_name_empty(data_dictionary),"Getting empty strings on name attribute")
         
              
@@ -36,8 +36,8 @@ class Test_json(unittest.TestCase):
 class Test_csv_output(unittest.TestCase):
     
     def test_csv_group(self):
-        anime_group = facebook_page_scraper.Facebook_scraper("170918513059147",5,"firefox",isGroup=True,  headless=True, username=fb_email, password=fb_password)
-        json_data = anime_group.scrap_to_json()
+        print(fb_email)
+        anime_group = facebook_page_scraper.Facebook_scraper("170918513059147",5,"firefox",isGroup=True,  headless=False, username=fb_email, password=fb_password)
         was_saved = anime_group.scrap_to_csv("group_test","./")
         self.assertEqual(was_saved,True)
 

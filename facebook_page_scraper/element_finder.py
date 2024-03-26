@@ -3,6 +3,7 @@ import datetime
 import logging
 import re
 import sys
+import time
 import urllib.request
 
 import dateutil
@@ -475,15 +476,17 @@ class Finder:
     @staticmethod
     def __login(driver, username, password):
         try:
-            # TODO this closes the login modal pop-up if you choose to not login above
+
             wait = WebDriverWait(driver, 4)  # considering that the elements might load a bit slow
+
+            # NOTE this closes the login modal pop-up if you choose to not login above
             try:
                 element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '[aria-label="Close"]')))
                 element.click()  # Click the element
             except Exception as ex:
                 print(f"no pop-up")
-
-            # time.sleep(3)
+            
+            time.sleep(1)
             #target username
             username_element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='email']")))
             password_element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='pass']")))

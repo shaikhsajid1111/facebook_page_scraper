@@ -139,15 +139,27 @@ class Facebook_scraper:
                 writer.writeheader()  # write headers to CSV file
             # iterate over entire dictionary, write each posts as a row to CSV file
             for key in json_data:
-                # parse post in a dictionary and write it as a single row
-                row = {'id': key, 'name': json_data[key]['name'], 'shares': json_data[key]['shares'],
-                       'likes': json_data[key]['reactions']['likes'], 'loves':  json_data[key]['reactions']['loves'],
-                       'wow': json_data[key]['reactions']['wow'], 'cares': json_data[key]['reactions']['cares'],
-                       'sad': json_data[key]['reactions']['sad'], 'angry': json_data[key]['reactions']['angry'],
-                       'haha': json_data[key]['reactions']['haha'], 'reactions_count': json_data[key]['reaction_count'],
-                       'comments': json_data[key]['comments'], 'content': json_data[key]['content'], 'posted_on': json_data[key]['posted_on'],
-                       'video': json_data[key]['video'], 'images': " ".join(json_data[key]['images']), 'post_url': json_data[key]['post_url']
-                       }
+                post = json_data[key]  # For better readability
+                reactions = post.get('reactions', {})  # Default to an empty dict if 'reactions' does not exist
+                row = {
+                    'id': key,
+                    'name': post.get('name', ''),
+                    'shares': post.get('shares', 0),
+                    'likes': reactions.get('likes', 0),
+                    'loves': reactions.get('loves', 0),
+                    'wow': reactions.get('wow', 0),
+                    'cares': reactions.get('cares', 0),
+                    'sad': reactions.get('sad', 0),
+                    'angry': reactions.get('angry', 0),
+                    'haha': reactions.get('haha', 0),
+                    'reactions_count': post.get('reaction_count', 0),
+                    'comments': post.get('comments', ''),
+                    'content': post.get('content', ''),
+                    'posted_on': post.get('posted_on', ''),
+                    'video': post.get('video', ''),
+                    'images': " ".join(post.get('images', [])),  # Join images list into a string, defaulting to an empty list
+                    'post_url': post.get('post_url', '')
+                }
                 writer.writerow(row)  # write row to CSV file
 
             data_file.close()  # after writing close the file
@@ -216,6 +228,11 @@ class Facebook_scraper:
                 # finds name depending on if this facebook site is a page or group (we pass a post obj or a webDriver)
                 name = Finder._Finder__find_name(
                     post if self.isGroup else self.__driver, self.__layout)  # find name element for page or for each post if this is used for group pages
+                
+
+                post_content = Finder._Finder__find_content(
+                    post, self.__driver, self.__layout)
+                # print("comments: " + post_content)
                 
                 # NOTE below is  additional fields to scrape, all of which have not been thoroughly tested for groups
                 if not self.isGroup:
@@ -294,9 +311,7 @@ class Facebook_scraper:
                     comments = int(
                         Scraping_utilities._Scraping_utilities__value_to_float(comments))
                     
-                    post_content = Finder._Finder__find_content(
-                        post, self.__driver, self.__layout)
-                    # print("comments: " + post_content)
+
                     # extract time
                     posted_time = Finder._Finder__find_posted_time(
                         post, self.__layout, link_element, self.__driver, self.isGroup)
@@ -317,7 +332,6 @@ class Facebook_scraper:
                     **({"reactions": reactions} if not self.isGroup else {}),
                     **({"reaction_count": total_reaction_count} if not self.isGroup else {}),
                     **({"comments": comments} if not self.isGroup else {}),
-                    **({"posted_on": posted_time} if not self.isGroup else {}),
                     **({"posted_on": posted_time} if not self.isGroup else {}),
                     **({"video": video} if not self.isGroup else {}),
                 }
