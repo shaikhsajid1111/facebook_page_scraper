@@ -36,7 +36,6 @@ class Test_json(unittest.TestCase):
 class Test_csv_output(unittest.TestCase):
     
     def test_csv_group(self):
-        print(fb_email)
         anime_group = facebook_page_scraper.Facebook_scraper("170918513059147",5,"firefox",isGroup=True,  headless=False, username=fb_email, password=fb_password)
         was_saved = anime_group.scrap_to_csv("group_test","./")
         self.assertEqual(was_saved,True)
