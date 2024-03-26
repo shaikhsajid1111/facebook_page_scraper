@@ -59,7 +59,7 @@ class Finder:
         return status
 
     @staticmethod
-    def __find_status(post, layout):
+    def __find_status(post, layout, isGroup):
         """finds URL of the post, then extracts link from that URL and returns it"""
         try:
             link = None
@@ -78,10 +78,9 @@ class Finder:
                     status_link
                 )
             elif layout == "new":
-                # links = post.find_elements(By.CSS_SELECTOR,"a[role='link']")
-                #THIS METHOD of getting the link seems to return the same as my method of getting the first a tag in the post, which may change. I'll keep both for now
+                
                 link = post.find_element(
-                    By.CSS_SELECTOR, 'span > a[role="link"]'
+                    By.CSS_SELECTOR, 'span > a[role="link"]' if isGroup else 'span > a[aria-label][role="link"]'
                 )
                 if link is not None:
                     status_link = link.get_attribute("href")
@@ -288,7 +287,7 @@ class Finder:
         return content
 
     @staticmethod
-    def __find_posted_time(post, layout, link_element, driver):
+    def __find_posted_time(post, layout, link_element, driver, isGroup):
         """finds posted time of the facebook post using selenium's webdriver's method"""
         try:
             # extract element that looks like <abbr class='_5ptz' data-utime="some unix timestamp"> </abbr>
@@ -299,36 +298,45 @@ class Finder:
                 )
                 return datetime.datetime.fromtimestamp(float(posted_time)).isoformat()
             elif layout == "new":
-                # NOTE There is no aria_label on these link elements anymore
-                # Facebook uses a shadowDOM element to hide timestamp, which is tricky to extract
-                # An unsuccesful attempt to extract time from nested shadowDOMs is below
+                if isGroup:
+                    # NOTE There is no aria_label on these link elements anymore
+                    # Facebook uses a shadowDOM element to hide timestamp, which is tricky to extract
+                    # An unsuccesful attempt to extract time from nested shadowDOMs is below
 
-                js_script = """
-                    // Starting from the provided element, find the SVG using querySelector
-                    var svgElement = arguments[0].querySelector('svg');
-                    
-                    // Assuming we're looking for a shadow DOM inside or related to the <use> tag, which is unconventional
-                    // var useElement = svgElement.querySelector('use');
-                    
-                    // Placeholder for accessing the shadow DOM, which is not directly applicable to <use> tags.
-                    // This step assumes there's some unconventional method to access related shadow content
-                    var shadowContent;
-                    
-                    // Hypothetically accessing shadow DOM or related content. This part needs adjustment based on actual structure or intent
-                    // As <use> tags don't host shadow DOMs, this is speculative and might represent a different approach in practice
-                    if (svgElement.shadowRoot) {
-                        shadowContent = svgElement.shadowRoot.querySelector('some-element').textContent;
-                    } else {
-                        // Fallback or alternative method to access intended content, as direct shadow DOM access on <use> is not standard
-                        shadowContent = 'Fallback or alternative content access method needed';
-                    }
-                    
-                    return shadowContent;
-                """
-                # Execute the script with the link_element as the argument
-                timestamp = driver.execute_script(js_script, link_element)
-                print("TIMESTAMP: " + str(timestamp))
-
+                    js_script = """
+                        // Starting from the provided element, find the SVG using querySelector
+                        var svgElement = arguments[0].querySelector('svg');
+                        
+                        // Assuming we're looking for a shadow DOM inside or related to the <use> tag, which is unconventional
+                        // var useElement = svgElement.querySelector('use');
+                        
+                        // Placeholder for accessing the shadow DOM, which is not directly applicable to <use> tags.
+                        // This step assumes there's some unconventional method to access related shadow content
+                        var shadowContent;
+                        
+                        // Hypothetically accessing shadow DOM or related content. This part needs adjustment based on actual structure or intent
+                        // As <use> tags don't host shadow DOMs, this is speculative and might represent a different approach in practice
+                        if (svgElement.shadowRoot) {
+                            shadowContent = svgElement.shadowRoot.querySelector('some-element').textContent;
+                        } else {
+                            // Fallback or alternative method to access intended content, as direct shadow DOM access on <use> is not standard
+                            shadowContent = 'Fallback or alternative content access method needed';
+                        }
+                        
+                        return shadowContent;
+                    """
+                    # Execute the script with the link_element as the argument
+                    timestamp = driver.execute_script(js_script, link_element)
+                    print("TIMESTAMP: " + str(timestamp))
+                elif not isGroup:
+                    aria_label_value = link_element.get_attribute("aria-label")
+                    timestamp = (
+                        parse(aria_label_value).isoformat()
+                        if len(aria_label_value) > 5
+                        else Scraping_utilities._Scraping_utilities__convert_to_iso(
+                            aria_label_value
+                        )
+                    )
                 return timestamp
 
         except TypeError:
@@ -385,7 +393,7 @@ class Finder:
         return sources
 
     @staticmethod
-    def __find_all_posts(driver, layout):
+    def __find_all_posts(driver, layout, isGroup):
         """finds all posts of the facebook page using selenium's webdriver's method"""
         try:
             # find all posts that looks like <div class="userContentWrapper"> </div>
@@ -394,9 +402,9 @@ class Finder:
                     By.CSS_SELECTOR, "div.userContentWrapper"
                 )
             elif layout == "new":
-                all_posts = driver.find_elements(By.CSS_SELECTOR, "div[role='feed'] > div")
-                # all_posts = driver.find_elements(By.CSS_SELECTOR, 'div[role="article"]')
-                # print("found all posts: " + str(all_posts))
+                # all_posts = driver.find_elements(By.CSS_SELECTOR, "div[role='feed'] > div")
+                # different query selectors depending on if we are scraping a FB page or group
+                all_posts = driver.find_elements(By.CSS_SELECTOR, "div[role='feed'] > div" if isGroup else 'div[role="article"]')
             return all_posts
         except NoSuchElementException:
             logger.error("Cannot find any posts! Exiting!")
