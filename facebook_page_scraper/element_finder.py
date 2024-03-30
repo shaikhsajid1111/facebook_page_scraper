@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
-from selenium.common.exceptions import NoSuchElementException
-from .scraping_utilities import Scraping_utilities
-from .driver_utilities import Utilities
-import sys
-import urllib.request
-import re
-from dateutil.parser import parse
-import dateutil
 import datetime
-from selenium.webdriver.common.by import By
 import logging
+import re
+import sys
+import time
+import urllib.request
+
+import dateutil
+from dateutil.parser import parse
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+from .driver_utilities import Utilities
+from .scraping_utilities import Scraping_utilities
 
 logger = logging.getLogger(__name__)
 format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -55,30 +60,55 @@ class Finder:
         return status
 
     @staticmethod
-    def __find_status(post, layout):
+    def __find_status(post, layout, isGroup):
         """finds URL of the post, then extracts link from that URL and returns it"""
         try:
             link = None
             status_link = None
+            status = None
+
             if layout == "old":
                 # aim is to find element that looks like <a href="URL" class="_5pcq"></a>
                 # after finding that element, get it's href value and pass it to different method that extracts post_id from that href
                 status_link = post.find_element(By.CLASS_NAME, "_5pcq").get_attribute(
                     "href"
                 )
+                print("old link layouut\n")
                 # extract out post id from post's url
                 status = Scraping_utilities._Scraping_utilities__extract_id_from_link(
                     status_link
                 )
             elif layout == "new":
-                # links = post.find_elements(By.CSS_SELECTOR,"a[role='link']")
+                
                 link = post.find_element(
-                    By.CSS_SELECTOR, 'span > a[aria-label][role="link"]'
+                    By.CSS_SELECTOR, 'span > a[role="link"]' if isGroup else 'span > a[aria-label][role="link"]'
                 )
-                status_link = link.get_attribute("href")
-                status = Scraping_utilities._Scraping_utilities__extract_id_from_link(
-                    status_link
-                )
+                if link is not None:
+                    status_link = link.get_attribute("href")
+                    status = Scraping_utilities._Scraping_utilities__extract_id_from_link(
+                        status_link
+                    )
+
+                links = post.find_elements(By.TAG_NAME, 'a')
+                if links:
+                    # Initialize variables to store the matching link element and URL
+                    matching_link_element = None
+                    post_url = None
+
+                    # Iterate over links to find the first one that matches the criteria
+                    for link in links:
+                        href = link.get_attribute('href')
+                        if href and '/groups/' in href:
+                            post_url = href  # Store the URL
+                            matching_link_element = link  # Store the link element
+                            break  # Exit the loop after finding the first match
+
+                    # Check if a matching link was found
+                    if post_url and matching_link_element:
+                        status = Scraping_utilities._Scraping_utilities__extract_id_from_link(post_url)
+                        # Now you have the URL, the status, and the matching link element itself
+                        return (status, post_url, matching_link_element)
+
         except NoSuchElementException:
             # if element is not found
             status = "NA"
@@ -86,8 +116,9 @@ class Finder:
         except Exception as ex:
             logger.exception("Error at find_status method : {}".format(ex))
             status = "NA"
-
         return (status, status_link, link)
+
+
 
     @staticmethod
     def __find_share(post, layout):
@@ -257,7 +288,7 @@ class Finder:
         return content
 
     @staticmethod
-    def __find_posted_time(post, layout, link_element):
+    def __find_posted_time(post, layout, link_element, driver, isGroup):
         """finds posted time of the facebook post using selenium's webdriver's method"""
         try:
             # extract element that looks like <abbr class='_5ptz' data-utime="some unix timestamp"> </abbr>
@@ -268,20 +299,47 @@ class Finder:
                 )
                 return datetime.datetime.fromtimestamp(float(posted_time)).isoformat()
             elif layout == "new":
-                aria_label_value = link_element.get_attribute("aria-label")
-                timestamp = (
-                    parse(aria_label_value).isoformat()
-                    if len(aria_label_value) > 5
-                    else Scraping_utilities._Scraping_utilities__convert_to_iso(
-                        aria_label_value
+                if isGroup:
+                    # NOTE There is no aria_label on these link elements anymore
+                    # Facebook uses a shadowDOM element to hide timestamp, which is tricky to extract
+                    # An unsuccesful attempt to extract time from nested shadowDOMs is below
+
+                    js_script = """
+                        // Starting from the provided element, find the SVG using querySelector
+                        var svgElement = arguments[0].querySelector('svg');
+                        
+                        // Assuming we're looking for a shadow DOM inside or related to the <use> tag, which is unconventional
+                        // var useElement = svgElement.querySelector('use');
+                        
+                        // Placeholder for accessing the shadow DOM, which is not directly applicable to <use> tags.
+                        // This step assumes there's some unconventional method to access related shadow content
+                        var shadowContent;
+                        
+                        // Hypothetically accessing shadow DOM or related content. This part needs adjustment based on actual structure or intent
+                        // As <use> tags don't host shadow DOMs, this is speculative and might represent a different approach in practice
+                        if (svgElement.shadowRoot) {
+                            shadowContent = svgElement.shadowRoot.querySelector('some-element').textContent;
+                        } else {
+                            // Fallback or alternative method to access intended content, as direct shadow DOM access on <use> is not standard
+                            shadowContent = 'Fallback or alternative content access method needed';
+                        }
+                        
+                        return shadowContent;
+                    """
+                    # Execute the script with the link_element as the argument
+                    timestamp = driver.execute_script(js_script, link_element)
+                    print("TIMESTAMP: " + str(timestamp))
+                elif not isGroup:
+                    aria_label_value = link_element.get_attribute("aria-label")
+                    timestamp = (
+                        parse(aria_label_value).isoformat()
+                        if len(aria_label_value) > 5
+                        else Scraping_utilities._Scraping_utilities__convert_to_iso(
+                            aria_label_value
+                        )
                     )
-                )
                 return timestamp
-        except dateutil.parser._parser.ParserError:
-            timestamp = Scraping_utilities._Scraping_utilities__convert_to_iso(
-                aria_label_value
-            )
-            return timestamp
+
         except TypeError:
             timestamp = ""
         except Exception as ex:
@@ -336,7 +394,7 @@ class Finder:
         return sources
 
     @staticmethod
-    def __find_all_posts(driver, layout):
+    def __find_all_posts(driver, layout, isGroup):
         """finds all posts of the facebook page using selenium's webdriver's method"""
         try:
             # find all posts that looks like <div class="userContentWrapper"> </div>
@@ -345,7 +403,9 @@ class Finder:
                     By.CSS_SELECTOR, "div.userContentWrapper"
                 )
             elif layout == "new":
-                all_posts = driver.find_elements(By.CSS_SELECTOR, 'div[role="article"]')
+                # all_posts = driver.find_elements(By.CSS_SELECTOR, "div[role='feed'] > div")
+                # different query selectors depending on if we are scraping a FB page or group
+                all_posts = driver.find_elements(By.CSS_SELECTOR, "div[role='feed'] > div" if isGroup else 'div[role="article"]')
             return all_posts
         except NoSuchElementException:
             logger.error("Cannot find any posts! Exiting!")
@@ -358,17 +418,20 @@ class Finder:
             sys.exit(1)
 
     @staticmethod
-    def __find_name(driver, layout):
-        """finds name of the facebook page using selenium's webdriver's method"""
+    def __find_name(driverOrPost, layout):
+        """finds name of the facebook page or post using selenium's webdriver's method"""
+        # Attempt to print the outer HTML of the driverOrPost for debugging
+        
         try:
             if layout == "old":
-                name = driver.find_element(By.CSS_SELECTOR, "a._64-f").get_attribute(
+                name = driverOrPost.find_element(By.CSS_SELECTOR, "a._64-f").get_attribute(
                     "textContent"
-                )
+            )
             elif layout == "new":
-                name = driver.find_element(By.TAG_NAME, "strong").get_attribute(
+                name = driverOrPost.find_element(By.TAG_NAME, "strong").get_attribute(
                     "textContent"
                 )
+                
             return name
         except Exception as ex:
             logger.exception("Error at __find_name method : {}".format(ex))
@@ -409,3 +472,40 @@ class Finder:
         except Exception as ex:
             logger.exception("Error at accept_cookies: {}".format(ex))
             sys.exit(1)
+
+    @staticmethod
+    def __login(driver, username, password):
+        try:
+
+            wait = WebDriverWait(driver, 4)  # considering that the elements might load a bit slow
+
+            # NOTE this closes the login modal pop-up if you choose to not login above
+            try:
+                element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '[aria-label="Close"]')))
+                element.click()  # Click the element
+            except Exception as ex:
+                print(f"no pop-up")
+            
+            time.sleep(1)
+            #target username
+            username_element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='email']")))
+            password_element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='pass']")))
+
+            #enter username and password
+            username_element.clear()
+            username_element.send_keys(str(username))
+            password_element.clear()
+            password_element.send_keys(str(password))
+
+            #target the login button and click it
+            try:
+                # Try to click the first button of type 'submit'
+                WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
+            except TimeoutException:
+                # If the button of type 'submit' is not found within 2 seconds, click the first 'button' found
+                WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button"))).click()
+        except (NoSuchElementException, IndexError):
+            pass
+        except Exception as ex:
+            logger.exception("Error at login: {}".format(ex))
+            # sys.exit(1)

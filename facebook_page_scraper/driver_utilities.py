@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
-from random import randint
-from selenium.webdriver.common.keys import Keys
 import logging
 import sys
 import time
+from random import randint
+
+from selenium.common.exceptions import (NoSuchElementException,
+                                        WebDriverException)
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 logger = logging.getLogger(__name__)
 format = logging.Formatter(
@@ -118,7 +120,7 @@ class Utilities:
             logger.exception("Error at close_popup method : {}".format(ex))
 
     @staticmethod
-    def __wait_for_element_to_appear(driver, layout):
+    def __wait_for_element_to_appear(driver, layout, timeout):
         """expects driver's instance, wait for posts to show.
         post's CSS class name is userContentWrapper
         """
@@ -128,22 +130,28 @@ class Utilities:
                 body = driver.find_element(By.CSS_SELECTOR, "body")
                 for _ in range(randint(3, 5)):
                     body.send_keys(Keys.PAGE_DOWN)
-                WebDriverWait(driver, 30).until(EC.presence_of_element_located(
+                WebDriverWait(driver, timeout).until(EC.presence_of_element_located(
                     (By.CSS_SELECTOR, '.userContentWrapper')))
+                return True
             elif layout == "new":
-                WebDriverWait(driver, 30).until(
+                WebDriverWait(driver, timeout).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "[aria-posinset]")))
+                print("new layout loaded")
+
+                return True
 
         except WebDriverException:
             # if it was not found,it means either page is not loading or it does not exists
             logger.critical("No posts were found!")
-            Utilities.__close_driver(driver)
-            # exit the program, because if posts does not exists,we cannot go further
-            sys.exit(1)
+            return False
+            # (optional) exit the program, because if posts does not exists,we cannot go further
+            # Utilities.__close_driver(driver)
+            # sys.exit(1)
         except Exception as ex:
             logger.exception(
                 "Error at wait_for_element_to_appear method : {}".format(ex))
-            Utilities.__close_driver(driver)
+            return False
+            # Utilities.__close_driver(driver)
 
     @staticmethod
     def __click_see_more(driver, content, selector=None):
