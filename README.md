@@ -222,6 +222,9 @@ password to log into Facebook when scraping (recommended to use .env)
 <br>
 <hr>
 <br>
+⚠️ <b> Warning: Use Logged-In Scraping at Your Own Risk </b> ⚠️
+
+Using logged-in scraping methods may result in the permanent suspension of your account. Proceed with caution, as violating a platform's terms of service can lead to severe consequences. Exercise discretion and adhere to ethical practices when collecting data through scraping. The library/provider assumes no responsibility for any consequences resulting from the misuse of scraping methods.
 
 <h3> Done with instantiation?. <b>Let the scraping begin!</b> </h3>
 <br
