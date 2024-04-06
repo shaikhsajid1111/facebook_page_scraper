@@ -79,7 +79,7 @@ class Finder:
                     status_link
                 )
             elif layout == "new":
-                
+
                 link = post.find_element(
                     By.CSS_SELECTOR, 'span > a[role="link"]' if isGroup else 'span > a[aria-label][role="link"]'
                 )
@@ -88,6 +88,8 @@ class Finder:
                     status = Scraping_utilities._Scraping_utilities__extract_id_from_link(
                         status_link
                     )
+                    if not isGroup and status_link and status: #early exit for non group
+                        return (status, status_link, link)
 
                 links = post.find_elements(By.TAG_NAME, 'a')
                 if links:
@@ -307,14 +309,14 @@ class Finder:
                     js_script = """
                         // Starting from the provided element, find the SVG using querySelector
                         var svgElement = arguments[0].querySelector('svg');
-                        
+
                         // Assuming we're looking for a shadow DOM inside or related to the <use> tag, which is unconventional
                         // var useElement = svgElement.querySelector('use');
-                        
+
                         // Placeholder for accessing the shadow DOM, which is not directly applicable to <use> tags.
                         // This step assumes there's some unconventional method to access related shadow content
                         var shadowContent;
-                        
+
                         // Hypothetically accessing shadow DOM or related content. This part needs adjustment based on actual structure or intent
                         // As <use> tags don't host shadow DOMs, this is speculative and might represent a different approach in practice
                         if (svgElement.shadowRoot) {
@@ -323,7 +325,7 @@ class Finder:
                             // Fallback or alternative method to access intended content, as direct shadow DOM access on <use> is not standard
                             shadowContent = 'Fallback or alternative content access method needed';
                         }
-                        
+
                         return shadowContent;
                     """
                     # Execute the script with the link_element as the argument
@@ -421,7 +423,7 @@ class Finder:
     def __find_name(driverOrPost, layout):
         """finds name of the facebook page or post using selenium's webdriver's method"""
         # Attempt to print the outer HTML of the driverOrPost for debugging
-        
+
         try:
             if layout == "old":
                 name = driverOrPost.find_element(By.CSS_SELECTOR, "a._64-f").get_attribute(
@@ -431,7 +433,7 @@ class Finder:
                 name = driverOrPost.find_element(By.TAG_NAME, "strong").get_attribute(
                     "textContent"
                 )
-                
+
             return name
         except Exception as ex:
             logger.exception("Error at __find_name method : {}".format(ex))
@@ -485,7 +487,7 @@ class Finder:
                 element.click()  # Click the element
             except Exception as ex:
                 print(f"no pop-up")
-            
+
             time.sleep(1)
             #target username
             username_element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='email']")))

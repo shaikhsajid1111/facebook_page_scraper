@@ -1,6 +1,6 @@
 import setuptools
 
-with open("README.md", "r") as file:
+with open("README.md", "r", encoding="utf-8") as file:
     long_description = file.read()
 
 requirements = ['selenium==4.1.0',
@@ -11,7 +11,7 @@ requirements = ['selenium==4.1.0',
 
 setuptools.setup(
     name="facebook_page_scraper",
-    version="5.0.3",
+    version="5.0.4",
     author="Sajid Shaikh",
     author_email="shaikhsajid3732@gmail.com",
     description="Python package to scrap facebook's pages front end with no limitations",
