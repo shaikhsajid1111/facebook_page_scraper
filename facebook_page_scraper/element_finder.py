@@ -134,12 +134,12 @@ class Finder:
                 shares = Scraping_utilities._Scraping_utilities__extract_numbers(shares)
             elif layout == "new":
                 element = post.find_element(
-                    By.CSS_SELECTOR, 'div:nth-child(2) > span > div > div > div:nth-child(1) > span'
+                    By.XPATH, './/div/span/div/span[contains(text(), " share")]'
                 )
                 shares = "0"
                 if not element:
                   return shares
-                return element.text
+                return element.text.replace(' shares', '').replace(' share', '')
             return shares
         except NoSuchElementException:
             # if element is not present that means there wasn't any shares
@@ -180,12 +180,12 @@ class Finder:
                 )
             elif layout == "new":
                 element = post.find_element(
-                    By.CSS_SELECTOR, 'div:nth-child(1) > span > div > div > div:nth-child(1) > span'
+                    By.XPATH, './/div/span/div/span[contains(text(), " comment")]'
                 )
                 comments = 0
                 if element is None:
                     return comments
-                return element.text
+                return element.text.replace(' comments', '').replace(' comment', '')
         except NoSuchElementException:
             comments = 0
         except Exception as ex:
