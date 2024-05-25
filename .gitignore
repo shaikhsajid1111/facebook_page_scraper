@@ -68,6 +68,9 @@ pythonenv*
 
 
 
+# PyCharm
+.idea/
+
 # Pyre type checker
 .pyre/
 
