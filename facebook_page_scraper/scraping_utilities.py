@@ -38,7 +38,7 @@ class Scraping_utilities:
         try:
             return dt.utcfromtimestamp(float(unix_timestamp)).isoformat()
         except Exception as ex:
-          logger.exception('Error at convert_time : {}'.format(ex))
+            logger.exception('Error at convert_time : {}'.format(ex))
 
     @staticmethod
     def __extract_content(content):
@@ -75,6 +75,10 @@ class Scraping_utilities:
             # if url pattern container "/videos"
             if "/videos/" in link:
                 status = link.split("/")[5]
+            elif "/reel/" in link:
+                status = link.split("/")[4]
+            elif "/events/" in link:
+                status = link.split("/")[4]
             elif "fbid=" in link:
                 status = link.split("=")[1].split("&")[0]
             elif "group" in link:
